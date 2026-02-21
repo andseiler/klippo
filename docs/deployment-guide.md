@@ -86,19 +86,27 @@ bash /tmp/setup-server.sh
 **What this does:**
 - Updates system packages
 - Installs Docker + Docker Compose
-- Configures firewall (UFW) — ports 22, 80, 443 only
-- Creates `piigateway` user with Docker access
+- Configures firewall (UFW) — ports 22222, 80, 443 only
+- Creates `piigateway` user with sudo + Docker access
+- Copies root's SSH keys to `piigateway`
+- Hardens SSH: port 22222, disables root login, disables password auth
 - Creates 2 GB swap (important for NER model on 4 GB server)
 - Installs fail2ban (SSH brute-force protection)
 - Enables automatic security updates
+
+> **After setup completes, root SSH is disabled.** Reconnect as:
+> ```bash
+> ssh -p 22222 piigateway@YOUR_SERVER_IP
+> ```
+> The `piigateway` user has `sudo` access for administrative tasks.
 
 ---
 
 ## Step 5: Clone the Repository
 
 ```bash
-# Switch to the piigateway user
-su - piigateway
+# Reconnect as piigateway (root login is now disabled)
+ssh -p 22222 piigateway@YOUR_SERVER_IP
 
 # Clone the repo
 git clone https://github.com/YOUR_ORG/YOUR_REPO.git /opt/piigateway
@@ -276,6 +284,7 @@ Go to your GitHub repo → **Settings** → **Secrets and variables** → **Acti
 | Secret | Value |
 |--------|-------|
 | `DEPLOY_HOST` | Your server IP (e.g., `65.108.xxx.xxx`) |
+| `DEPLOY_PORT` | `22222` |
 | `DEPLOY_USER` | `piigateway` |
 | `DEPLOY_SSH_KEY` | Contents of the SSH private key that can connect to the server |
 
@@ -310,7 +319,7 @@ Go to repo → **Actions** → **Build, Push & Deploy** → **Run workflow** →
 ### Manual redeployment (on server)
 
 ```bash
-ssh piigateway@YOUR_SERVER_IP
+ssh -p 22222 piigateway@YOUR_SERVER_IP
 cd /opt/piigateway
 git pull --ff-only
 ./deploy/deploy.sh
@@ -486,4 +495,4 @@ Internet
      └──── /*  ──→  Vue 3 SPA (static files)
 ```
 
-All services run in Docker containers on a single server. Only ports 80 and 443 are exposed to the internet. PostgreSQL, Redis, and the PII service are on an internal Docker network.
+All services run in Docker containers on a single server. Only ports 80, 443, and 22222 (SSH) are exposed to the internet. PostgreSQL, Redis, and the PII service are on an internal Docker network.

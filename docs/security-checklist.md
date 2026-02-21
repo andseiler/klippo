@@ -137,9 +137,10 @@ Complete every item before going live. Each item includes a verification command
 
 ## 5. Infrastructure
 
-- [ ] **Firewall allows only ports 22, 80, 443**
+- [ ] **Firewall allows only ports 22222, 80, 443**
   ```bash
   sudo ufw status
+  # Should show 22222/tcp, 80/tcp, 443/tcp ALLOW — no port 22
   ```
 
 - [ ] **Fail2ban is running**
@@ -208,20 +209,64 @@ Complete every item before going live. Each item includes a verification command
 
 ---
 
+## 8. SSH Hardening
+
+- [ ] **SSH port is 22222** (not default 22)
+  ```bash
+  sudo grep '^Port ' /etc/ssh/sshd_config
+  # Should print: Port 22222
+  ```
+
+- [ ] **Root login is disabled**
+  ```bash
+  sudo grep '^PermitRootLogin ' /etc/ssh/sshd_config
+  # Should print: PermitRootLogin no
+  ```
+
+- [ ] **Password authentication is disabled**
+  ```bash
+  sudo grep '^PasswordAuthentication ' /etc/ssh/sshd_config
+  # Should print: PasswordAuthentication no
+  ```
+
+- [ ] **Root SSH is actually rejected**
+  ```bash
+  # From your local machine:
+  ssh root@YOUR_SERVER_IP -p 22222
+  # Should be rejected
+  ```
+
+- [ ] **piigateway user can connect and has sudo**
+  ```bash
+  ssh -p 22222 piigateway@YOUR_SERVER_IP 'sudo whoami'
+  # Should print: root
+  ```
+
+---
+
+## 9. Docker Container Hardening
+
+- [ ] **All containers have no-new-privileges set**
+  ```bash
+  docker inspect --format='{{.Name}} {{.HostConfig.SecurityOpt}}' $(docker ps -q)
+  # Every container should show [no-new-privileges:true]
+  ```
+
+- [ ] **API and PII service containers have read-only filesystem**
+  ```bash
+  docker inspect --format='{{.Name}} ReadOnly={{.HostConfig.ReadonlyRootfs}}' $(docker ps -q)
+  # api and pii-service should show ReadOnly=true
+  ```
+
+---
+
 ## Additional Recommendations (Non-Blocking)
 
 These are not required for launch but improve security posture over time:
 
-1. **SSH key-only authentication** — disable password login in `/etc/ssh/sshd_config`:
-   ```
-   PasswordAuthentication no
-   ```
-
-2. **Change SSH port** — move from 22 to a non-standard port to reduce noise.
-
-3. **Set up monitoring** — use Uptime Robot, Hetrixtools, or similar to monitor
+1. **Set up monitoring** — use Uptime Robot, Hetrixtools, or similar to monitor
    `https://YOUR_DOMAIN/api/v1/health` and alert on non-200 responses.
 
-4. **Log aggregation** — consider shipping Docker logs to a central service for analysis.
+2. **Log aggregation** — consider shipping Docker logs to a central service for analysis.
 
-5. **Periodic dependency updates** — check for .NET, Python, and npm vulnerabilities monthly.
+3. **Periodic dependency updates** — check for .NET, Python, and npm vulnerabilities monthly.
