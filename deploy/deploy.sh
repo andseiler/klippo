@@ -36,20 +36,7 @@ if [ "${SKIP_BUILD}" != "--skip-build" ]; then
     docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" build
 fi
 
-# 3. Run database migrations
-echo "==> Running database migrations..."
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d postgres
-sleep 5  # Wait for postgres to be ready
-
-# Migrations are auto-applied on startup in Development mode
-# For production, use the API container directly
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" run --rm api \
-    sh -c "dotnet PiiGateway.Api.dll --migrate-only 2>/dev/null || true" &
-MIGRATE_PID=$!
-sleep 10
-kill $MIGRATE_PID 2>/dev/null || true
-
-# 4. Rolling restart
+# 3. Start services (migrations auto-apply on API startup)
 echo "==> Starting services..."
 docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d
 

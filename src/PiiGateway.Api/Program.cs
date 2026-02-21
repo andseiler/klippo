@@ -111,16 +111,18 @@ var app = builder.Build();
 // Initialize encryption converter (must happen before any DbContext usage)
 PiiGateway.Infrastructure.DependencyInjection.InitializeEncryption(app.Services);
 
+// Auto-apply EF Core migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PiiGatewayDbContext>();
+    db.Database.Migrate();
+}
+
 // Swagger in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // Auto-apply EF Core migrations
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<PiiGatewayDbContext>();
-    db.Database.Migrate();
 }
 
 // Security headers (before everything)
