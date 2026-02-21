@@ -23,8 +23,10 @@ docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" stop nginx 2>/dev/n
 
 # Use a temporary certbot container that writes into the Docker named volumes
 # used by docker-compose.prod.yml (certbot_conf and certbot_www)
+# Override the entrypoint (compose defines a renewal loop as entrypoint)
 docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" run --rm \
   -p 80:80 \
+  --entrypoint certbot \
   certbot certonly \
   --standalone \
   --email "${EMAIL}" \
