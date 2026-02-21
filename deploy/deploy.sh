@@ -57,7 +57,7 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
     sleep 2
 
     # Health check via nginx (port 80/443 exposed to host)
-    STATUS=$(curl -sf http://localhost/api/v1/health 2>/dev/null | \
+    STATUS=$(curl -sfLk https://localhost/api/v1/health 2>/dev/null | \
         grep -o '"status":"[^"]*"' | head -1 || echo "")
 
     if echo "${STATUS}" | grep -q "healthy"; then
