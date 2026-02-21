@@ -38,7 +38,7 @@ fi
 
 # 2b. Remove stale frontend dist volume so Docker re-populates from fresh image
 echo "==> Refreshing frontend assets..."
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" rm -sf frontend-build
+docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" rm -sf frontend-build nginx
 docker volume rm docker_frontend_dist 2>/dev/null || true
 
 # 3. Start services (migrations auto-apply on API startup)
