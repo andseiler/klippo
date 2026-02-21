@@ -10,12 +10,6 @@ const router = createRouter({
       meta: { layout: 'bare' },
     },
     {
-      path: '/register',
-      name: 'register',
-      component: () => import('../views/RegisterView.vue'),
-      meta: { layout: 'bare' },
-    },
-    {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
@@ -75,7 +69,7 @@ router.beforeEach((to) => {
     return { name: 'login', query: { redirect: to.fullPath } }
   }
 
-  if ((to.name === 'login' || to.name === 'register') && token && !isGuest) {
+  if (to.name === 'login' && token && !isGuest) {
     return { name: 'dashboard' }
   }
 })

@@ -20,7 +20,6 @@ public class AuthController : ControllerBase
     private readonly IJwtService _jwtService;
     private readonly JwtOptions _jwtOptions;
     private readonly GuestDemoOptions _guestOptions;
-    private readonly IEmailService _emailService;
     private readonly ILogger<AuthController> _logger;
     private readonly PlaygroundUsageTracker _usageTracker;
 
@@ -30,7 +29,6 @@ public class AuthController : ControllerBase
         IJwtService jwtService,
         IOptions<JwtOptions> jwtOptions,
         IOptions<GuestDemoOptions> guestOptions,
-        IEmailService emailService,
         ILogger<AuthController> logger,
         PlaygroundUsageTracker usageTracker)
     {
@@ -39,64 +37,8 @@ public class AuthController : ControllerBase
         _jwtService = jwtService;
         _jwtOptions = jwtOptions.Value;
         _guestOptions = guestOptions.Value;
-        _emailService = emailService;
         _logger = logger;
         _usageTracker = usageTracker;
-    }
-
-    [HttpPost("register")]
-    [EnableRateLimiting("auth")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        var existingUser = await _userRepository.GetByEmailAsync(request.Email);
-        if (existingUser != null)
-            return Conflict(new { message = "Email already registered" });
-
-        var organization = new Organization
-        {
-            Id = Guid.NewGuid(),
-            Name = request.OrganizationName,
-            CreatedAt = DateTime.UtcNow
-        };
-        await _organizationRepository.CreateAsync(organization);
-
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            Email = request.Email,
-            Name = request.Name,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            OrganizationId = organization.Id,
-            Role = UserRole.Admin,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        var refreshToken = _jwtService.GenerateRefreshToken();
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtOptions.RefreshExpiryDays);
-
-        await _userRepository.CreateAsync(user);
-
-        // Fire-and-forget email notification
-        _ = _emailService.SendRegistrationNotificationAsync(user.Email, user.Name, organization.Name)
-            .ContinueWith(t =>
-            {
-                if (t.IsFaulted)
-                    _logger.LogError(t.Exception, "Failed to send registration notification.");
-            }, TaskContinuationOptions.OnlyOnFaulted);
-
-        var accessToken = _jwtService.GenerateAccessToken(user);
-
-        return StatusCode(201, new AuthResponse
-        {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken,
-            UserId = user.Id,
-            Email = user.Email,
-            Name = user.Name,
-            Role = user.Role.ToString(),
-            OrganizationId = organization.Id
-        });
     }
 
     [HttpPost("login")]

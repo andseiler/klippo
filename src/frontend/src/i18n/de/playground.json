@@ -1,8 +1,11 @@
 {
   "playground": {
     "title": "Klippo ausprobieren",
-    "subtitle": "Testen Sie Klippo ohne Registrierung. Daten werden nach 1 Stunde gelöscht.",
+    "subtitle": "Beta — Verfremden Sie Texte und Dokumente, damit Sie KI-Chatbots nutzen können, ohne persönliche Daten preiszugeben. Daten werden nach 1 Stunde gelöscht.",
     "description": "Laden Sie ein Dokument hoch oder fügen Sie Text ein. Klippo erkennt Namen, Adressen, Telefonnummern und weitere personenbezogene Daten und ersetzt sie durch Pseudonyme.",
+    "betaNotice": "Dies ist eine Beta-Version von Klippo.",
+    "betaAccount": "Für einen vollständigen Zugang schreiben Sie an",
+    "betaTechnical": "Klippo wird vollständig in Deutschland (Hetzner) gehostet. Die PII-Erkennung erfolgt lokal auf dem Server mittels Regex und Named Entity Recognition (NER). Kein externer Dienst sieht Ihre Daten. Optional kann ein lokales LLM zur erweiterten Erkennung eingesetzt werden.",
     "tabs": {
       "file": "Datei hochladen",
       "text": "Text eingeben"
@@ -20,6 +23,6 @@
     "cancelled": "Verarbeitung wurde abgebrochen.",
     "startOver": "Neu starten",
     "guestError": "Gastsitzung konnte nicht gestartet werden. Bitte später erneut versuchen.",
-    "dailyLimitReached": "Tageslimit erreicht. Bitte registrieren Sie sich für unbegrenzten Zugang."
+    "dailyLimitReached": "Tageslimit erreicht. Für vollen Zugang schreiben Sie an mail@andreas-seiler.net"
   }
 }

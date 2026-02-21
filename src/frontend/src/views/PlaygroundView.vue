@@ -7,6 +7,7 @@ import { useEstimatedProgress } from '../composables/useEstimatedProgress'
 import { useTextSelection } from '../composables/useTextSelection'
 import { useDocumentSearch } from '../composables/useDocumentSearch'
 import { useScrollSync } from '../composables/useScrollSync'
+import { useCollapsiblePanels } from '../composables/useCollapsiblePanels'
 import { useJobsStore } from '../stores/jobs'
 import { useReviewStore } from '../stores/review'
 import type { ViewMode } from '../stores/review'
@@ -26,6 +27,7 @@ import AppModal from '../components/ui/AppModal.vue'
 import AppSpinner from '../components/ui/AppSpinner.vue'
 import AppProgress from '../components/ui/AppProgress.vue'
 import LanguageToggle from '../components/layout/LanguageToggle.vue'
+import PlaygroundFooter from '../components/playground/PlaygroundFooter.vue'
 
 const { t } = useI18n()
 const jobsStore = useJobsStore()
@@ -35,6 +37,7 @@ const estimatedProgress = useEstimatedProgress()
 const { segments: _segments, entities: _entities } = storeToRefs(reviewStore)
 const documentSearch = useDocumentSearch(_segments, _entities)
 const { scrollElA, scrollElB } = useScrollSync()
+const { isCollapsible, isPanelExpanded, togglePanel } = useCollapsiblePanels()
 
 const docViewerRef = ref<ComponentPublicInstance | null>(null)
 const pseudoPanelRef = ref<ComponentPublicInstance | null>(null)
@@ -280,6 +283,19 @@ onUnmounted(() => {
           </p>
         </div>
 
+        <AppAlert variant="info" class="text-sm">
+          <p class="font-medium">{{ t('playground.betaNotice') }}</p>
+          <p class="mt-1">
+            {{ t('playground.betaAccount') }}
+            <a href="mailto:mail@andreas-seiler.net" class="font-medium underline">
+              mail@andreas-seiler.net
+            </a>
+          </p>
+          <p class="mt-1 text-xs opacity-80">
+            {{ t('playground.betaTechnical') }}
+          </p>
+        </AppAlert>
+
         <!-- Tab bar -->
         <div class="flex border-b border-gray-200 dark:border-gray-700">
           <button
@@ -413,37 +429,108 @@ onUnmounted(() => {
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 h-full">
             <!-- Verfremden mode: 3-column layout -->
             <template v-if="reviewStore.viewMode === 'pseudonymized'">
-              <WorkbenchDocumentViewer
-                ref="docViewerRef"
-                class="lg:col-span-4"
-                :segments="reviewStore.segments"
-                :entities-by-segment="reviewStore.entitiesBySegment"
-                :display-mode="reviewStore.viewMode"
-                :text-selection="textSelection"
-                :document-search="documentSearch"
-                @add-search-matches="(type: string) => reviewStore.addSearchMatchesAsEntities(documentSearch.actionableMatches.value, type)"
-              />
-              <PseudonymizedTextPanel
-                ref="pseudoPanelRef"
-                class="lg:col-span-4"
-                :segments="reviewStore.segments"
-                :entities-by-segment="reviewStore.entitiesBySegment"
-                :document-search="documentSearch"
-                @complete-review="showCompleteReviewModal = true"
-              />
-              <WorkbenchRightRail class="lg:col-span-4" :text-selection="textSelection" />
+              <div class="lg:col-span-4">
+                <button
+                  v-if="isCollapsible"
+                  :class="[
+                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
+                    isPanelExpanded('original') ? 'rounded-b-none border-b-0' : '',
+                  ]"
+                  @click="togglePanel('original')"
+                >
+                  {{ t('review.workbench.originalPanel.title') }}
+                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('original') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <WorkbenchDocumentViewer
+                  v-show="!isCollapsible || isPanelExpanded('original')"
+                  ref="docViewerRef"
+                  :segments="reviewStore.segments"
+                  :entities-by-segment="reviewStore.entitiesBySegment"
+                  :display-mode="reviewStore.viewMode"
+                  :text-selection="textSelection"
+                  :document-search="documentSearch"
+                  @add-search-matches="(type: string) => reviewStore.addSearchMatchesAsEntities(documentSearch.actionableMatches.value, type)"
+                />
+              </div>
+              <div class="lg:col-span-4">
+                <button
+                  v-if="isCollapsible"
+                  :class="[
+                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
+                    isPanelExpanded('pseudonymized') ? 'rounded-b-none border-b-0' : '',
+                  ]"
+                  @click="togglePanel('pseudonymized')"
+                >
+                  {{ t('review.workbench.pseudoPanel.title') }}
+                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('pseudonymized') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <PseudonymizedTextPanel
+                  v-show="!isCollapsible || isPanelExpanded('pseudonymized')"
+                  ref="pseudoPanelRef"
+                  :segments="reviewStore.segments"
+                  :entities-by-segment="reviewStore.entitiesBySegment"
+                  :document-search="documentSearch"
+                  @complete-review="showCompleteReviewModal = true"
+                />
+              </div>
+              <div class="lg:col-span-4">
+                <button
+                  v-if="isCollapsible"
+                  :class="[
+                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
+                    isPanelExpanded('mapping') ? 'rounded-b-none border-b-0' : '',
+                  ]"
+                  @click="togglePanel('mapping')"
+                >
+                  {{ t('review.workbench.zuordnung.title') }}
+                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('mapping') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <WorkbenchRightRail
+                  v-show="!isCollapsible || isPanelExpanded('mapping')"
+                  :text-selection="textSelection"
+                />
+              </div>
             </template>
 
             <!-- Klartext mode: 2-column layout -->
             <template v-else>
-              <WorkbenchDocumentViewer
-                class="lg:col-span-8"
-                :segments="reviewStore.segments"
-                :entities-by-segment="reviewStore.entitiesBySegment"
-                :display-mode="reviewStore.viewMode"
-                :text-selection="textSelection"
-              />
-              <WorkbenchRightRail class="lg:col-span-4" :text-selection="textSelection" />
+              <div class="lg:col-span-8">
+                <button
+                  v-if="isCollapsible"
+                  :class="[
+                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
+                    isPanelExpanded('original') ? 'rounded-b-none border-b-0' : '',
+                  ]"
+                  @click="togglePanel('original')"
+                >
+                  {{ t('review.workbench.originalPanel.title') }}
+                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('original') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <WorkbenchDocumentViewer
+                  v-show="!isCollapsible || isPanelExpanded('original')"
+                  :segments="reviewStore.segments"
+                  :entities-by-segment="reviewStore.entitiesBySegment"
+                  :display-mode="reviewStore.viewMode"
+                  :text-selection="textSelection"
+                />
+              </div>
+              <div class="lg:col-span-4">
+                <button
+                  v-if="isCollapsible"
+                  :class="[
+                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
+                    isPanelExpanded('mapping') ? 'rounded-b-none border-b-0' : '',
+                  ]"
+                  @click="togglePanel('mapping')"
+                >
+                  {{ t('review.workbench.zuordnung.title') }}
+                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('mapping') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                <WorkbenchRightRail
+                  v-show="!isCollapsible || isPanelExpanded('mapping')"
+                  :text-selection="textSelection"
+                />
+              </div>
             </template>
           </div>
         </main>
@@ -481,5 +568,7 @@ onUnmounted(() => {
         </AppModal>
       </template>
     </template>
+
+    <PlaygroundFooter />
   </div>
 </template>

@@ -1,8 +1,11 @@
 {
   "playground": {
     "title": "Klippo Playground",
-    "subtitle": "Try Klippo without creating an account. Data is deleted after 1 hour.",
+    "subtitle": "Beta — Pseudonymize texts and documents so you can use AI chatbots without exposing personal data. Data is deleted after 1 hour.",
     "description": "Upload a document or paste text. Klippo detects names, addresses, phone numbers, and other personal data and replaces them with pseudonyms.",
+    "betaNotice": "This is a beta version of Klippo.",
+    "betaAccount": "For full access, contact",
+    "betaTechnical": "Klippo is fully hosted in Germany (Hetzner). PII detection runs locally on the server using regex and Named Entity Recognition (NER). No external service sees your data. An optional local LLM can be used for enhanced detection.",
     "tabs": {
       "file": "Upload file",
       "text": "Enter text"
@@ -20,6 +23,6 @@
     "cancelled": "Processing was cancelled.",
     "startOver": "Start over",
     "guestError": "Could not start a guest session. Please try again later.",
-    "dailyLimitReached": "Daily limit reached. Please register for unlimited access."
+    "dailyLimitReached": "Daily limit reached. For full access, contact mail@andreas-seiler.net"
   }
 }

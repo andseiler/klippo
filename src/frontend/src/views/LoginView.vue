@@ -77,10 +77,10 @@ async function handleLogin() {
         </AppButton>
       </form>
       <p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
-        {{ t('auth.noAccount') }}
-        <RouterLink to="/register" class="text-blue-600 hover:text-blue-500 dark:text-blue-400">
-          {{ t('auth.registerLink') }}
-        </RouterLink>
+        {{ t('auth.contactForAccount') }}
+        <a href="mailto:mail@andreas-seiler.net" class="text-blue-600 hover:text-blue-500 dark:text-blue-400">
+          mail@andreas-seiler.net
+        </a>
       </p>
       <p class="mt-2 text-center text-sm">
         <RouterLink to="/playground" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">

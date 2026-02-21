@@ -17,13 +17,6 @@ export interface LoginRequest {
   password: string
 }
 
-export interface RegisterRequest {
-  email: string
-  name: string
-  password: string
-  organizationName: string
-}
-
 export interface AuthResponse {
   accessToken: string
   refreshToken: string
