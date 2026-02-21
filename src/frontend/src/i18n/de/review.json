@@ -1,0 +1,209 @@
+{
+  "review": {
+    "topBar": {
+      "back": "Zurück"
+    },
+    "popover": {
+      "sources": "Quellen",
+      "replacement": "Ersetzung",
+      "changeType": "Typ ändern",
+      "selectType": "Typ wählen",
+      "adjustSpan": "Bereich anpassen"
+    },
+    "entityTypes": {
+      "PERSON": "Person",
+      "ADDRESS": "Adresse",
+      "EMAIL": "E-Mail",
+      "PHONE_DACH": "Telefon (DACH)",
+      "IBAN": "IBAN",
+      "DE_STEUER_ID": "Steuer-ID",
+      "DATE_OF_BIRTH": "Geburtsdatum",
+      "DATE": "Datum",
+      "FINANCIAL_AMOUNT": "Geldbetrag",
+      "COMPANY": "Unternehmen",
+      "LICENSE_PLATE": "Kennzeichen",
+      "HEALTH_INSURANCE_ID": "Krankenversicherungsnr.",
+      "CITY": "Stadt",
+      "COUNTRY": "Land"
+    },
+    "status": {
+      "addedmanual": "Manuell hinzugefügt"
+    },
+    "delete": "Löschen",
+    "confirmDelete": "Löschen bestätigen",
+    "cancelDelete": "Abbrechen",
+    "occurrences": "{count}x",
+    "addPii": {
+      "title": "Sensible Daten manuell hinzufügen",
+      "instructions": "Markieren Sie Text im Dokument und wählen Sie einen Typ.",
+      "noSelection": "Kein Text ausgewählt. Markieren Sie Text im Dokument.",
+      "added": "Entität erfolgreich hinzugefügt"
+    },
+    "entityList": {
+      "title": "Entitäten",
+      "empty": "Keine Entitäten vorhanden"
+    },
+    "summary": {
+      "total": "Gesamt"
+    },
+    "training": {
+      "title": "Einführung für Prüfer",
+      "step": "Schritt {current} von {total}",
+      "back": "Zurück",
+      "next": "Weiter",
+      "complete": "Abschließen",
+      "intro": {
+        "heading": "Was sind personenbezogene Daten?",
+        "text1": "Personenbezogene Daten sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen (Art. 4 Nr. 1 DSGVO).",
+        "text2": "Als Prüfer stellen Sie sicher, dass alle personenbezogenen Daten korrekt erkannt und kategorisiert wurden, bevor die Pseudonymisierung erfolgt."
+      },
+      "piiTypes": {
+        "heading": "Farbkodierung der Erkennungssicherheit",
+        "text": "Entitäten sind nach der Erkennungssicherheit farblich markiert:",
+        "high": "Hohe Sicherheit – wahrscheinlich korrekt erkannt",
+        "medium": "Mittlere Sicherheit – bitte besonders prüfen",
+        "low": "Niedrige Sicherheit – möglicherweise falsch-positiv"
+      },
+      "manualAdd": {
+        "heading": "Sensible Daten manuell hinzufügen",
+        "text1": "Wenn die automatische Erkennung sensible Daten übersehen hat, können Sie diese manuell hinzufügen:",
+        "step1": "Markieren Sie den betreffenden Text im Dokument",
+        "step2": "Wählen Sie den Typ der sensiblen Daten in der Seitenleiste",
+        "step3": "Die Entität wird zur Prüfliste hinzugefügt"
+      },
+      "automationBias": {
+        "heading": "Automatisierungsbias vermeiden",
+        "warning": "Gemäß EU AI Act Art. 14 müssen menschliche Prüfer die KI-Ergebnisse kritisch hinterfragen.",
+        "text1": "Verlassen Sie sich nicht blind auf die automatische Erkennung. Lesen Sie den gesamten Text und achten Sie auf übersehene sensible Daten.",
+        "text2": "Prüfen Sie alle Entitäten sorgfältig und entfernen Sie Fehlerkennungen."
+      }
+    },
+    "completeReviewModal": {
+      "title": "Prüfung abschliessen",
+      "checkbox1": "Ich habe die erkannten Entitäten geprüft und bestätigt.",
+      "checkbox2": "Ich werde den Text ausschließlich in einen Enterprise-/API-Zugang mit Auftragsverarbeitungsvertrag (DPA) einfügen — NICHT in einen Consumer-Chat (z.B. ChatGPT Free, Gemini Free).",
+      "checkbox3": "Mir ist bewusst, dass verfremdete Daten weiterhin personenbezogene Daten im Sinne der DSGVO sein können.",
+      "continueReview": "Weiter prüfen",
+      "endReview": "Prüfung beenden"
+    },
+    "workbench": {
+      "title": "Arbeitsbereich",
+      "modeToggle": {
+        "verfremden": "Verfremden",
+        "klartext": "Klartext wiederherstellen"
+      },
+      "pseudoPanel": {
+        "title": "Verfremdet",
+        "copyButton": "Verfremdeten Text kopieren"
+      },
+      "zuordnung": {
+        "title": "Zuordnung",
+        "deleteAll": "Alle löschen",
+        "confirmDeleteAll": "Wirklich löschen?"
+      },
+      "originalPanel": {
+        "title": "Original"
+      },
+      "tabs": {
+        "entities": "Entitäten",
+        "rules": "Regeln",
+        "export": "Export",
+        "mapping": "Zuordnung"
+      },
+      "export": {
+        "description": "Kopieren Sie den verfremdeten Text in die Zwischenablage.",
+        "copyText": "Text in Zwischenablage kopieren",
+        "copied": "Kopiert!",
+        "mappingTitle": "Token-Zuordnung",
+        "mappingDescription": "Zuordnung von Originaltext zu Pseudonymisierungs-Token. Bearbeiten Sie Token, um alle Vorkommen zu ändern.",
+        "originalColumn": "Original",
+        "tokenColumn": "Token",
+        "noMappings": "Keine Token-Zuordnungen verfügbar.",
+        "noEntities": "Keine Entitäten erkannt."
+      },
+      "depseudo": {
+        "pseudonymizedLabel": "Verfremdet",
+        "originalLabel": "Klartext",
+        "inputLabel": "KI-Ausgabe einfügen",
+        "inputPlaceholder": "Text mit Token wie [PERSON_001] hier einfügen ...",
+        "outputLabel": "Ergebnis im Klartext",
+        "replacedCount": "{count} Token ersetzt",
+        "mappingTitle": "Token-Zuordnung",
+        "mappingDescription": "Alle Pseudonymisierungs-Token und ihre Originalwerte.",
+        "tokenColumn": "Token",
+        "originalColumn": "Originalwert",
+        "noMappings": "Keine Zuordnungen verfügbar.",
+        "copyOutput": "Klartext kopieren"
+      },
+      "header": {
+        "backToDashboard": "Dashboard",
+        "backToPlayground": "Playground",
+        "entities": "{count} Entitäten",
+        "llmScan": "Mit KI Modell suchen",
+        "rescan": "Erneuter Scan (Regex/NER)",
+        "continueReview": "Prüfung fortsetzen",
+        "completeReview": "Prüfung abschliessen"
+      },
+      "llmScan": {
+        "notConfiguredTitle": "KI-Modell nicht verfügbar",
+        "notConfiguredMessage": "Das KI-Modell ist derzeit nicht konfiguriert.",
+        "title": "KI-gestützte Erkennung",
+        "scanning": "Segment {current} von {total} wird analysiert...",
+        "completed": "{count} neue Entitäten gefunden",
+        "noResults": "Keine zusätzlichen personenbezogenen Daten gefunden.",
+        "apply": "Übernehmen",
+        "close": "Schliessen",
+        "cancel": "Abbrechen",
+        "cancelled": "Scan wurde abgebrochen.",
+        "error": "KI-Erkennung fehlgeschlagen",
+        "instructionsLabel": "Anweisungen für die KI",
+        "startScan": "Scan starten",
+        "detectionType": "Typ",
+        "detectionText": "Text",
+        "detectionConfidence": "Konfidenz"
+      },
+      "rescan": {
+        "title": "Erneuter Scan (Regex/NER)",
+        "scanning": "Segment {current} von {total} wird erneut gescannt...",
+        "completed": "{count} neue Entitäten gefunden",
+        "noResults": "Keine zusätzlichen Entitäten durch Regex/NER-Rescan gefunden.",
+        "error": "Erneuter Scan fehlgeschlagen"
+      },
+      "groupBy": {
+        "label": "Gruppieren nach",
+        "type": "Typ",
+        "severity": "Schweregrad",
+        "page": "Seite"
+      },
+      "rules": {
+        "title": "Erkennungsregeln",
+        "description": "Aktuelle Erkennungskonfiguration für dieses Dokument.",
+        "nerToggle": "NER (Named Entity Recognition)",
+        "regexPhone": "Regex: Telefon (DACH)",
+        "regexIds": "Regex: Ausweise / Steuer-IDs",
+        "reviewPolicy": "Prüfrichtlinie",
+        "autoAcceptLow": "Automatische Bestätigung bei LOW",
+        "requireReviewHigh": "Prüfung erforderlich bei HIGH/MEDIUM"
+      },
+      "addByText": {
+        "button": "Sensible Daten hinzufügen",
+        "placeholder": "Text zum Suchen eingeben...",
+        "matchInfo": "{total} Vorkommen ({available} verfügbar)",
+        "addAll": "{count} als sensible Daten hinzufügen",
+        "klartextLabel": "Klartext",
+        "verfremdetLabel": "Verfremdet",
+        "verfremdetPlaceholder": "Ersatztext eingeben...",
+        "autoVerfremden": "Automatisch verfremden"
+      },
+      "search": {
+        "placeholder": "Text suchen...",
+        "matchCount": "{total} Treffer ({available} verfügbar)",
+        "addAll": "Alle als sensible Daten hinzufügen",
+        "noMatches": "Keine Treffer",
+        "close": "Schliessen",
+        "prev": "Vorheriger Treffer",
+        "next": "Nächster Treffer"
+      }
+    }
+  }
+}

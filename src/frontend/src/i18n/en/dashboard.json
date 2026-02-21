@@ -1,0 +1,15 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "uploadAction": "New Detection",
+    "noJobs": "No jobs yet",
+    "noJobsDescription": "Upload your first document to get started.",
+    "searchPlaceholder": "Search by file name or status\u2026",
+    "table": {
+      "fileName": "File name",
+      "status": "Status",
+      "createdAt": "Created",
+      "actions": "Actions"
+    }
+  }
+}

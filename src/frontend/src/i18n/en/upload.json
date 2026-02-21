@@ -1,0 +1,30 @@
+{
+  "upload": {
+    "title": "New Detection",
+    "selectFile": "Select file",
+    "dragDrop": "Drag and drop a file here or click to browse",
+    "dragActive": "Drop file here",
+    "selectedFile": "Selected file",
+    "fileSize": "File size",
+    "fileType": "File type",
+    "maxSize": "Maximum file size: 50 MB",
+    "invalidType": "This file type is not supported",
+    "fileTooLarge": "The file exceeds the maximum size of 50 MB",
+    "submit": "Start pseudonymization",
+    "submitting": "Processing...",
+    "uploadProgress": "Upload progress",
+    "success": "Document uploaded successfully",
+    "tabs": {
+      "file": "Upload file",
+      "text": "Enter text"
+    },
+    "textInput": {
+      "nameLabel": "Document name",
+      "textPlaceholder": "Paste text here..."
+    },
+    "errors": {
+      "noText": "Please enter some text first.",
+      "noFile": "Please select a file first."
+    }
+  }
+}

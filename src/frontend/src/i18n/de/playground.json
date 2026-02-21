@@ -1,0 +1,25 @@
+{
+  "playground": {
+    "title": "Klippo ausprobieren",
+    "subtitle": "Testen Sie Klippo ohne Registrierung. Daten werden nach 1 Stunde gelöscht.",
+    "description": "Laden Sie ein Dokument hoch oder fügen Sie Text ein. Klippo erkennt Namen, Adressen, Telefonnummern und weitere personenbezogene Daten und ersetzt sie durch Pseudonyme.",
+    "tabs": {
+      "file": "Datei hochladen",
+      "text": "Text eingeben"
+    },
+    "submit": "Erkennung starten",
+    "submitting": "Wird verarbeitet\u2026",
+    "processing": {
+      "title": "Dokument wird verarbeitet\u2026",
+      "description": "Die Erkennung läuft. Das dauert normalerweise einige Sekunden.",
+      "elapsed": "{seconds}s vergangen"
+    },
+    "failed": "Verarbeitung fehlgeschlagen. Bitte erneut versuchen.",
+    "cancel": "Abbrechen",
+    "cancelling": "Wird abgebrochen\u2026",
+    "cancelled": "Verarbeitung wurde abgebrochen.",
+    "startOver": "Neu starten",
+    "guestError": "Gastsitzung konnte nicht gestartet werden. Bitte später erneut versuchen.",
+    "dailyLimitReached": "Tageslimit erreicht. Bitte registrieren Sie sich für unbegrenzten Zugang."
+  }
+}

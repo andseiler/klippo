@@ -1,0 +1,17 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "uploadAction": "Neue Erkennung",
+    "noJobs": "Noch keine Aufträge vorhanden",
+    "noJobsDescription": "Laden Sie Ihr erstes Dokument hoch, um zu beginnen.",
+    "searchPlaceholder": "Suche nach Dateiname oder Status\u2026",
+    "table": {
+      "fileName": "Dateiname",
+      "status": "Status",
+      "createdAt": "Erstellt am",
+      "actions": "Aktionen"
+    },
+    "deleteJob": "Datei löschen",
+    "confirmDeleteJob": "Datei wirklich löschen?"
+  }
+}

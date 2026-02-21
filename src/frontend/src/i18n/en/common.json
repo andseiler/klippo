@@ -1,0 +1,41 @@
+{
+  "common": {
+    "appName": "Klippo",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "apply": "Apply",
+    "noResults": "No results found",
+    "error": "An error occurred",
+    "success": "Success",
+    "logout": "Logout",
+    "darkMode": "Dark mode",
+    "language": "Language",
+    "page": "Page",
+    "of": "of",
+    "showing": "Showing",
+    "entries": "entries",
+    "notFound": {
+      "title": "404",
+      "message": "Page not found",
+      "backToDashboard": "Go to Dashboard"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "upload": "New Detection",
+    "jobs": "Jobs"
+  },
+  "roles": {
+    "Admin": "Administrator",
+    "Reviewer": "Reviewer",
+    "User": "User"
+  }
+}

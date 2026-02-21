@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pseudonymization Workbench (Mockup)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .thin-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+    .thin-scroll::-webkit-scrollbar-thumb { background: rgba(100,116,139,.35); border-radius: 9999px; }
+    .thin-scroll::-webkit-scrollbar-track { background: transparent; }
+
+    .hl { border-radius: .5rem; padding: .06rem .22rem; }
+    .hl-low { background: rgba(34,197,94,.14); outline: 1px solid rgba(34,197,94,.25); }
+    .hl-med { background: rgba(245,158,11,.16); outline: 1px solid rgba(245,158,11,.28); }
+    .hl-high { background: rgba(239,68,68,.14); outline: 1px solid rgba(239,68,68,.28); }
+
+    .hl-selected { outline: 2px solid rgba(59,130,246,.8) !important; box-shadow: 0 0 0 4px rgba(59,130,246,.12); }
+
+    .stickybar { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="min-h-screen">
+    <header class="border-b bg-white">
+      <div class="mx-auto max-w-[1400px] px-4 py-4">
+        <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex items-start gap-3">
+            <a href="#" class="mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border hover:bg-slate-50" title="Back">
+              ←
+            </a>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <h1 class="text-lg font-semibold leading-tight">
+                  OEBBTicket-1796009020138767.pdf
+                </h1>
+                <span class="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">Doc class: Other</span>
+                <span class="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 ring-1 ring-emerald-100">Sensitivity: Standard</span>
+              </div>
+              <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-600">
+                <span>Entities: <span class="font-medium text-slate-800" id="countEntities">3</span></span>
+                <span>High: <span class="font-medium text-slate-800" id="countHigh">1</span></span>
+                <span>Reviewed: <span class="font-medium text-slate-800" id="countReviewed">0</span>/<span class="font-medium text-slate-800" id="countTotal">3</span></span>
+                <span class="inline-flex items-center gap-2">
+                  <span class="h-2 w-2 rounded-full bg-blue-500"></span>
+                  <span class="font-medium text-slate-800">In Review</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button class="rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" id="btnScan">
+              Re-scan
+            </button>
+            <button class="rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" id="btnAudit">
+              View audit
+            </button>
+            <button class="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700" id="btnPrimary">
+              Continue review
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-[1400px] px-4 py-4">
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <section class="lg:col-span-8">
+          <div class="overflow-hidden rounded-2xl border bg-white shadow-sm">
+            <div class="stickybar border-b bg-white/80">
+              <div class="flex flex-col gap-3 p-3 md:flex-row md:items-center md:justify-between">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">Workbench</span>
+                  <span class="text-sm text-slate-600">Select a highlight or entity to review.</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="inline-flex rounded-xl border bg-white p-1" role="tablist" aria-label="Mode">
+                    <button class="modeBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-mode="original">
+                      Original
+                    </button>
+                    <button class="modeBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-mode="pseudonymized">
+                      Pseudonymized
+                    </button>
+                    <button class="modeBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-mode="diff">
+                      Diff
+                    </button>
+                  </div>
+
+                  <button class="rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" id="btnZoom">
+                    Fit
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12">
+              <div class="md:col-span-12">
+                <div class="thin-scroll max-h-[70vh] overflow-auto p-5">
+                  <div class="mb-4 flex items-center justify-between">
+                    <div class="text-sm text-slate-600">
+                      Page <span class="font-medium text-slate-900">1</span> of <span class="font-medium text-slate-900">1</span>
+                    </div>
+                    <div class="text-sm text-slate-600">
+                      Confidence threshold: <span class="font-medium text-slate-900">Medium+</span>
+                    </div>
+                  </div>
+
+                  <article class="prose prose-slate max-w-none">
+                    <p class="leading-7 text-slate-800">
+                      Ihre CO2-Ersparnis: 34,4 kg für Ihre Bahnfahrt pro Person. Bitte nicht knicken.
+                      Ticketcode: 2366 6200 1430 0654 zur Buchung
+                      <span class="hl hl-high cursor-pointer" data-entity-id="e1">0588 1421 0128</span>.
+                      In Österreich akzeptieren wir Ihr PDF-Ticket digital.
+                    </p>
+
+                    <p class="leading-7 text-slate-800">
+                      Alle Informationen erhalten Sie auch im ÖBB-Kundenservice
+                      <span class="hl hl-med cursor-pointer" data-entity-id="e2">05-1717</span>.
+                      Aktuelle Streckeninformationen finden Sie auf www.streckeninfo.oebb.at.
+                    </p>
+
+                    <p class="leading-7 text-slate-800">
+                      Fahrgast: <span class="hl hl-med cursor-pointer" data-entity-id="e3">Seiler Andreas</span> — 1 Erwachsener.
+                      Gültig: Mo, 19. Jan 2026 bis Di, 20. Jan 2026. Preis: 46,70 EUR.
+                    </p>
+
+                    <div class="mt-6 rounded-xl border bg-slate-50 p-4">
+                      <div class="text-sm font-semibold text-slate-900">Tips (mock)</div>
+                      <ul class="mt-2 list-disc pl-5 text-sm text-slate-700">
+                        <li>Click any highlight to open its review card on the right.</li>
+                        <li>Use <span class="font-medium">Diff</span> mode to quickly spot replacements.</li>
+                        <li>Add missing PII from the right rail “Manual add”.</li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="lg:col-span-4">
+          <div class="overflow-hidden rounded-2xl border bg-white shadow-sm">
+            <div class="border-b bg-white">
+              <div class="flex items-center justify-between p-3">
+                <div class="text-sm font-semibold text-slate-900">Right rail</div>
+                <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700" id="railHint">Entities</span>
+              </div>
+
+              <div class="flex gap-2 px-3 pb-3">
+                <button class="tabBtn flex-1 rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" data-tab="entities">Entities</button>
+                <button class="tabBtn flex-1 rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" data-tab="manual">Manual add</button>
+                <button class="tabBtn flex-1 rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" data-tab="rules">Rules</button>
+                <button class="tabBtn flex-1 rounded-xl border bg-white px-3 py-2 text-sm font-medium hover:bg-slate-50" data-tab="audit">Audit</button>
+              </div>
+            </div>
+
+            <div class="thin-scroll max-h-[70vh] overflow-auto p-3">
+              <div class="tabPanel" id="tab-entities">
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="inline-flex rounded-xl border bg-white p-1">
+                    <button class="filterBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-filter="all">All (3)</button>
+                    <button class="filterBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-filter="pending">Pending (3)</button>
+                    <button class="filterBtn rounded-lg px-3 py-1.5 text-sm font-medium" data-filter="reviewed">Reviewed (0)</button>
+                  </div>
+                  <select class="rounded-xl border px-3 py-2 text-sm">
+                    <option>Group by: Type</option>
+                    <option>Group by: Severity</option>
+                    <option>Group by: Page</option>
+                  </select>
+                </div>
+
+                <div class="mt-3 space-y-3">
+                  <div class="rounded-2xl border p-4" id="entityCard">
+                    <div class="flex items-start justify-between gap-2">
+                      <div>
+                        <div class="text-sm font-semibold text-slate-900" id="entityLabel">Select an entity</div>
+                        <div class="mt-1 text-xs text-slate-600" id="entityMeta">Click a highlight in the document or an item below.</div>
+                      </div>
+                      <span class="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700" id="entityBadge">—</span>
+                    </div>
+
+                    <div class="mt-3 grid gap-3">
+                      <div>
+                        <div class="text-xs font-medium text-slate-600">Detected value</div>
+                        <div class="mt-1 rounded-xl border bg-slate-50 px-3 py-2 text-sm font-medium text-slate-900" id="entityValue">—</div>
+                      </div>
+
+                      <div>
+                        <div class="flex items-center justify-between">
+                          <div class="text-xs font-medium text-slate-600">Replacement</div>
+                          <button class="text-xs font-semibold text-blue-600 hover:text-blue-700" id="btnSuggest">Suggest</button>
+                        </div>
+                        <input id="entityReplacement" class="mt-1 w-full rounded-xl border px-3 py-2 text-sm" placeholder="e.g., PHONE_001 / NAME_001" />
+                        <div class="mt-1 text-xs text-slate-600">Keep consistent replacements for the same subject where possible.</div>
+                      </div>
+
+                      <div class="flex flex-wrap gap-2">
+                        <button class="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700" id="btnConfirm">
+                          Confirm
+                        </button>
+                        <button class="rounded-xl border bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50" id="btnReject">
+                          Reject
+                        </button>
+                        <button class="ml-auto rounded-xl border bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50" id="btnNext">
+                          Next →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="rounded-2xl border">
+                    <div class="border-b p-3">
+                      <div class="text-sm font-semibold text-slate-900">Detected entities</div>
+                      <div class="mt-1 text-xs text-slate-600">Click to jump to highlight</div>
+                    </div>
+
+                    <div class="divide-y">
+                      <button class="entityRow w-full px-3 py-3 text-left hover:bg-slate-50" data-entity-id="e1">
+                        <div class="flex items-center justify-between">
+                          <div class="text-sm font-semibold text-slate-900">0588 1421 0128</div>
+                          <span class="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700 ring-1 ring-red-100">HIGH</span>
+                        </div>
+                        <div class="mt-1 flex items-center justify-between text-xs text-slate-600">
+                          <span>Type: Phone (DACH)</span>
+                          <span>Status: Pending</span>
+                        </div>
+                      </button>
+
+                      <button class="entityRow w-full px-3 py-3 text-left hover:bg-slate-50" data-entity-id="e2">
+                        <div class="flex items-center justify-between">
+                          <div class="text-sm font-semibold text-slate-900">05-1717</div>
+                          <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 ring-1 ring-amber-100">MEDIUM</span>
+                        </div>
+                        <div class="mt-1 flex items-center justify-between text-xs text-slate-600">
+                          <span>Type: Phone (DACH)</span>
+                          <span>Status: Pending</span>
+                        </div>
+                      </button>
+
+                      <button class="entityRow w-full px-3 py-3 text-left hover:bg-slate-50" data-entity-id="e3">
+                        <div class="flex items-center justify-between">
+                          <div class="text-sm font-semibold text-slate-900">Seiler Andreas</div>
+                          <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-800 ring-1 ring-amber-100">MEDIUM</span>
+                        </div>
+                        <div class="mt-1 flex items-center justify-between text-xs text-slate-600">
+                          <span>Type: Person</span>
+                          <span>Status: Pending</span>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="rounded-2xl border p-4">
+                    <div class="text-sm font-semibold text-slate-900">Bulk actions</div>
+                    <div class="mt-2 grid gap-2">
+                      <button class="rounded-xl border bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">
+                        Auto-confirm low risk
+                      </button>
+                      <button class="rounded-xl border bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">
+                        Review medium/high only
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tabPanel hidden" id="tab-manual">
+                <div class="rounded-2xl border p-4">
+                  <div class="text-sm font-semibold text-slate-900">Add PII manually</div>
+                  <p class="mt-1 text-xs text-slate-600">
+                    Mark text in the document (in real app), or enter value here to create a new entity.
+                  </p>
+
+                  <div class="mt-3 grid gap-3">
+                    <div>
+                      <label class="text-xs font-medium text-slate-600">Type</label>
+                      <select class="mt-1 w-full rounded-xl border px-3 py-2 text-sm">
+                        <option>Person</option>
+                        <option>Address</option>
+                        <option>Phone (DACH)</option>
+                        <option>Tax ID</option>
+                        <option>IBAN</option>
+                        <option>Email</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600">Value</label>
+                      <input class="mt-1 w-full rounded-xl border px-3 py-2 text-sm" placeholder="e.g., Max Mustermann" />
+                    </div>
+                    <div>
+                      <label class="text-xs font-medium text-slate-600">Replacement</label>
+                      <input class="mt-1 w-full rounded-xl border px-3 py-2 text-sm" placeholder="e.g., NAME_002" />
+                    </div>
+                    <button class="rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                      Add entity
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tabPanel hidden" id="tab-rules">
+                <div class="space-y-3">
+                  <div class="rounded-2xl border p-4">
+                    <div class="text-sm font-semibold text-slate-900">Rules & detection</div>
+                    <p class="mt-1 text-xs text-slate-600">
+                      Configure which detectors run and which entity types require manual review.
+                    </p>
+                    <div class="mt-3 grid gap-2">
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">NER (names, orgs, locations)</span>
+                        <input type="checkbox" checked />
+                      </label>
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">Regex: Phone (DACH)</span>
+                        <input type="checkbox" checked />
+                      </label>
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">Regex: IDs / Tax IDs</span>
+                        <input type="checkbox" />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="rounded-2xl border p-4">
+                    <div class="text-sm font-semibold text-slate-900">Review policy</div>
+                    <div class="mt-3 grid gap-2">
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">Auto-accept LOW confidence</span>
+                        <input type="checkbox" />
+                      </label>
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">Require review for HIGH</span>
+                        <input type="checkbox" checked />
+                      </label>
+                      <label class="flex items-center justify-between gap-3 rounded-xl border px-3 py-2">
+                        <span class="text-sm font-medium">Require review for MEDIUM</span>
+                        <input type="checkbox" checked />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tabPanel hidden" id="tab-audit">
+                <div class="rounded-2xl border p-4">
+                  <div class="text-sm font-semibold text-slate-900">Audit log (mock)</div>
+                  <p class="mt-1 text-xs text-slate-600">Every change is tracked for compliance and troubleshooting.</p>
+
+                  <div class="mt-3 space-y-2 text-sm">
+                    <div class="rounded-xl border bg-slate-50 p-3">
+                      <div class="flex items-center justify-between">
+                        <span class="font-semibold">Scan completed</span>
+                        <span class="text-xs text-slate-600">07:46:42</span>
+                      </div>
+                      <div class="mt-1 text-xs text-slate-600">Detected 3 entities (1 high, 2 medium).</div>
+                    </div>
+
+                    <div class="rounded-xl border bg-slate-50 p-3">
+                      <div class="flex items-center justify-between">
+                        <span class="font-semibold">Replacement suggested</span>
+                        <span class="text-xs text-slate-600">—</span>
+                      </div>
+                      <div class="mt-1 text-xs text-slate-600">No confirmed changes yet.</div>
+                    </div>
+                  </div>
+
+                  <button class="mt-3 w-full rounded-xl border bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50">
+                    Export audit log
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="border-t bg-white p-3">
+              <div class="flex items-center justify-between gap-2">
+                <div class="text-xs text-slate-600">
+                  All medium/high entities must be reviewed before export.
+                </div>
+                <button class="rounded-xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800" id="btnExport">
+                  Export…
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const entities = {
+      e1: { value: "0588 1421 0128", type: "Phone (DACH)", severity: "HIGH", status: "Pending", suggested: "PHONE_001" },
+      e2: { value: "05-1717", type: "Phone (DACH)", severity: "MEDIUM", status: "Pending", suggested: "PHONE_002" },
+      e3: { value: "Seiler Andreas", type: "Person", severity: "MEDIUM", status: "Pending", suggested: "NAME_001" },
+    };
+
+    let selectedEntityId = null;
+    let mode = "original";
+
+    function setActiveMode(nextMode) {
+      mode = nextMode;
+      document.querySelectorAll(".modeBtn").forEach(btn => {
+        const isActive = btn.dataset.mode === mode;
+        btn.classList.toggle("bg-slate-900", isActive);
+        btn.classList.toggle("text-white", isActive);
+        btn.classList.toggle("text-slate-700", !isActive);
+      });
+
+      document.querySelectorAll("[data-entity-id]").forEach(span => {
+        const id = span.dataset.entityId;
+        const e = entities[id];
+        span.textContent =
+          mode === "original" ? e.value :
+          mode === "pseudonymized" ? e.suggested :
+          `${e.value} → ${e.suggested}`;
+      });
+    }
+
+    function clearSelection() {
+      document.querySelectorAll("[data-entity-id]").forEach(el => el.classList.remove("hl-selected"));
+      document.querySelectorAll(".entityRow").forEach(el => el.classList.remove("bg-slate-50"));
+    }
+
+    function selectEntity(id) {
+      selectedEntityId = id;
+      const e = entities[id];
+      clearSelection();
+
+      const docEl = document.querySelector(`[data-entity-id="${id}"]`);
+      if (docEl) docEl.classList.add("hl-selected");
+
+      const row = document.querySelector(`.entityRow[data-entity-id="${id}"]`);
+      if (row) row.classList.add("bg-slate-50");
+
+      document.getElementById("entityLabel").textContent = `${e.type}`;
+      document.getElementById("entityMeta").textContent = `Severity: ${e.severity} • Status: ${e.status}`;
+      document.getElementById("entityBadge").textContent = e.severity;
+      document.getElementById("entityValue").textContent = (mode === "original") ? e.value : (mode === "pseudonymized" ? e.suggested : `${e.value} → ${e.suggested}`);
+      document.getElementById("entityReplacement").value = e.suggested;
+
+      const badge = document.getElementById("entityBadge");
+      badge.className = "rounded-full px-2 py-1 text-xs font-semibold";
+      if (e.severity === "HIGH") badge.classList.add("bg-red-50","text-red-700","ring-1","ring-red-100");
+      else badge.classList.add("bg-amber-50","text-amber-800","ring-1","ring-amber-100");
+
+      if (docEl) docEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function setActiveTab(tab) {
+      document.querySelectorAll(".tabPanel").forEach(p => p.classList.add("hidden"));
+      document.getElementById(`tab-${tab}`).classList.remove("hidden");
+      document.getElementById("railHint").textContent = tab.charAt(0).toUpperCase() + tab.slice(1);
+
+      document.querySelectorAll(".tabBtn").forEach(btn => {
+        const isActive = btn.dataset.tab === tab;
+        btn.classList.toggle("bg-slate-900", isActive);
+        btn.classList.toggle("text-white", isActive);
+      });
+    }
+
+    document.querySelectorAll(".modeBtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setActiveMode(btn.dataset.mode);
+        if (selectedEntityId) selectEntity(selectedEntityId);
+      });
+    });
+
+    document.querySelectorAll("[data-entity-id]").forEach(el => {
+      el.addEventListener("click", () => {
+        setActiveTab("entities");
+        selectEntity(el.dataset.entityId);
+      });
+    });
+
+    document.querySelectorAll(".entityRow").forEach(row => {
+      row.addEventListener("click", () => {
+        setActiveTab("entities");
+        selectEntity(row.dataset.entityId);
+      });
+    });
+
+    document.querySelectorAll(".tabBtn").forEach(btn => {
+      btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+    });
+
+    document.getElementById("btnSuggest").addEventListener("click", () => {
+      if (!selectedEntityId) return;
+      document.getElementById("entityReplacement").value = entities[selectedEntityId].suggested;
+    });
+
+    document.getElementById("btnConfirm").addEventListener("click", () => {
+      if (!selectedEntityId) return;
+      entities[selectedEntityId].status = "Reviewed";
+      const reviewed = Object.values(entities).filter(e => e.status === "Reviewed").length;
+      document.getElementById("countReviewed").textContent = reviewed;
+
+      const row = document.querySelector(`.entityRow[data-entity-id="${selectedEntityId}"]`);
+      if (row) {
+        const statusEl = row.querySelectorAll(".text-xs.text-slate-600 span")[1];
+        if (statusEl) statusEl.textContent = "Status: Reviewed";
+      }
+
+      selectEntity(selectedEntityId);
+      alert("Confirmed (mock). In a real app this would update the replacement map and audit log.");
+    });
+
+    document.getElementById("btnNext").addEventListener("click", () => {
+      const ids = Object.keys(entities);
+      if (!selectedEntityId) {
+        selectEntity(ids[0]);
+        return;
+      }
+      const idx = ids.indexOf(selectedEntityId);
+      const next = ids[(idx + 1) % ids.length];
+      selectEntity(next);
+    });
+
+    document.getElementById("btnPrimary").addEventListener("click", () => {
+      if (!selectedEntityId) selectEntity("e1");
+      else alert("Continuing review… (mock)");
+    });
+
+    document.getElementById("btnExport").addEventListener("click", () => {
+      alert("Export dialog would open here (mock).");
+    });
+
+    setActiveMode("original");
+    setActiveTab("entities");
+
+    document.querySelectorAll(".filterBtn").forEach((btn, i) => {
+      const active = i === 0;
+      btn.classList.toggle("bg-slate-900", active);
+      btn.classList.toggle("text-white", active);
+      btn.classList.toggle("text-slate-700", !active);
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filterBtn").forEach(b => {
+          b.classList.remove("bg-slate-900","text-white");
+          b.classList.add("text-slate-700");
+        });
+        btn.classList.add("bg-slate-900","text-white");
+        btn.classList.remove("text-slate-700");
+      });
+    });
+  </script>
+</body>
+</html>

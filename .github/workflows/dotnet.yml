@@ -1,0 +1,51 @@
+name: .NET CI
+
+on:
+  push:
+    paths:
+      - 'src/PiiGateway.*/**'
+      - '.github/workflows/dotnet.yml'
+  pull_request:
+    paths:
+      - 'src/PiiGateway.*/**'
+      - '.github/workflows/dotnet.yml'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: piigateway
+          POSTGRES_USER: piigateway
+          POSTGRES_PASSWORD: changeme_dev_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U piigateway -d piigateway"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/PiiGateway.sln
+
+      - name: Build
+        run: dotnet build src/PiiGateway.sln --no-restore
+
+      - name: Test
+        run: dotnet test src/PiiGateway.Tests --no-build --verbosity normal
+        env:
+          ConnectionStrings__PostgreSQL: "Host=localhost;Port=5432;Database=piigateway;Username=piigateway;Password=changeme_dev_only"
+          ConnectionStrings__Redis: "localhost:6379"
+          Jwt__Secret: "ci_test_secret_minimum_64_characters_long_for_hmac_sha256_signing!!"

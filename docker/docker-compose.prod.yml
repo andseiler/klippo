@@ -1,0 +1,169 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: piigateway
+      POSTGRES_USER: piigateway
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U piigateway -d piigateway"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - piigateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - piigateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-piigateway}/api:${VERSION:-latest}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__PostgreSQL: "Host=postgres;Port=5432;Database=piigateway;Username=piigateway;Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__Redis: "redis:6379,password=${REDIS_PASSWORD}"
+      Jwt__Secret: "${JWT_SECRET}"
+      Jwt__Issuer: PiiGateway
+      Jwt__Audience: PiiGateway
+      Encryption__Key: "${ENCRYPTION_KEY}"
+      PiiService__BaseUrl: "http://pii-service:8001"
+      Cors__AllowedOrigins: "https://${DOMAIN}"
+      FileStorage__BasePath: /app/uploads
+    volumes:
+      - upload_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    networks:
+      - piigateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  pii-service:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-piigateway}/pii-service:${VERSION:-latest}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.pii-service
+    environment:
+      LLM_BACKEND: ${LLM_BACKEND:-disabled}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY:-}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      NER_MODEL_NAME: ${NER_MODEL_NAME:-Davlan/bert-base-multilingual-cased-ner-hrl}
+      NER_DEVICE: ${NER_DEVICE:-cpu}
+      LAYER2_ENABLED: ${LAYER2_ENABLED:-true}
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    networks:
+      - piigateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - frontend_dist:/usr/share/nginx/html:ro
+      - certbot_conf:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+    networks:
+      - piigateway
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend-build:
+    image: ${REGISTRY:-ghcr.io}/${IMAGE_PREFIX:-piigateway}/frontend:${VERSION:-latest}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend.prod
+    volumes:
+      - frontend_dist:/usr/share/nginx/html
+    # This container exits after copying files; nginx serves them
+    restart: "no"
+    networks:
+      - piigateway
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    restart: unless-stopped
+    networks:
+      - piigateway
+
+volumes:
+  postgres_data:
+  redis_data:
+  upload_data:
+  frontend_dist:
+  certbot_conf:
+  certbot_www:
+
+networks:
+  piigateway:
+    driver: bridge

@@ -1,0 +1,16 @@
+{
+  "job": {
+    "status": {
+      "created": "Created",
+      "processing": "Processing",
+      "readyreview": "Ready for review",
+      "inreview": "In review",
+      "pseudonymized": "Pseudonymized",
+      "scanpassed": "Scan passed",
+      "scanfailed": "Scan failed",
+      "depseudonymized": "Depseudonymized",
+      "failed": "Failed",
+      "cancelled": "Cancelled"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "playground": {
+    "title": "Klippo Playground",
+    "subtitle": "Try Klippo without creating an account. Data is deleted after 1 hour.",
+    "description": "Upload a document or paste text. Klippo detects names, addresses, phone numbers, and other personal data and replaces them with pseudonyms.",
+    "tabs": {
+      "file": "Upload file",
+      "text": "Enter text"
+    },
+    "submit": "Start detection",
+    "submitting": "Processing\u2026",
+    "processing": {
+      "title": "Processing your document\u2026",
+      "description": "Detection is running. This usually takes a few seconds.",
+      "elapsed": "{seconds}s elapsed"
+    },
+    "failed": "Processing failed. Please try again.",
+    "cancel": "Cancel",
+    "cancelling": "Cancelling\u2026",
+    "cancelled": "Processing was cancelled.",
+    "startOver": "Start over",
+    "guestError": "Could not start a guest session. Please try again later.",
+    "dailyLimitReached": "Daily limit reached. Please register for unlimited access."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "upload": {
+    "title": "Neue Erkennung",
+    "selectFile": "Datei auswählen",
+    "dragDrop": "Datei hierher ziehen oder klicken zum Auswählen",
+    "dragActive": "Datei hier ablegen",
+    "selectedFile": "Ausgewählte Datei",
+    "fileSize": "Dateigröße",
+    "fileType": "Dateityp",
+    "maxSize": "Maximale Dateigröße: 50 MB",
+    "invalidType": "Dieser Dateityp wird nicht unterstützt",
+    "fileTooLarge": "Die Datei überschreitet die maximale Größe von 50 MB",
+    "submit": "Pseudonymisierung starten",
+    "submitting": "Wird verarbeitet...",
+    "uploadProgress": "Upload-Fortschritt",
+    "success": "Dokument erfolgreich hochgeladen",
+    "tabs": {
+      "file": "Datei hochladen",
+      "text": "Text eingeben"
+    },
+    "textInput": {
+      "nameLabel": "Dokumentname",
+      "textPlaceholder": "Text hier einfügen..."
+    },
+    "errors": {
+      "noText": "Bitte geben Sie zuerst einen Text ein.",
+      "noFile": "Bitte wählen Sie zuerst eine Datei aus."
+    }
+  }
+}

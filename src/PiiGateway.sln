@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiiGateway.Core", "PiiGateway.Core\PiiGateway.Core.csproj", "{55046C53-9D3E-427B-AF8D-3D86A5EC31C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiiGateway.Infrastructure", "PiiGateway.Infrastructure\PiiGateway.Infrastructure.csproj", "{69E56DC6-F5B7-4CAD-AA4C-E18CED69147A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiiGateway.Api", "PiiGateway.Api\PiiGateway.Api.csproj", "{7049B681-4D70-4F38-AAA1-C578586E4D6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiiGateway.Tests", "PiiGateway.Tests\PiiGateway.Tests.csproj", "{6908CB05-7F01-41C8-943F-875EA1611A2A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55046C53-9D3E-427B-AF8D-3D86A5EC31C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55046C53-9D3E-427B-AF8D-3D86A5EC31C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55046C53-9D3E-427B-AF8D-3D86A5EC31C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55046C53-9D3E-427B-AF8D-3D86A5EC31C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69E56DC6-F5B7-4CAD-AA4C-E18CED69147A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69E56DC6-F5B7-4CAD-AA4C-E18CED69147A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69E56DC6-F5B7-4CAD-AA4C-E18CED69147A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69E56DC6-F5B7-4CAD-AA4C-E18CED69147A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7049B681-4D70-4F38-AAA1-C578586E4D6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7049B681-4D70-4F38-AAA1-C578586E4D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7049B681-4D70-4F38-AAA1-C578586E4D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7049B681-4D70-4F38-AAA1-C578586E4D6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6908CB05-7F01-41C8-943F-875EA1611A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6908CB05-7F01-41C8-943F-875EA1611A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6908CB05-7F01-41C8-943F-875EA1611A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6908CB05-7F01-41C8-943F-875EA1611A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

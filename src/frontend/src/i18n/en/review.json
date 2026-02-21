@@ -1,0 +1,209 @@
+{
+  "review": {
+    "topBar": {
+      "back": "Back"
+    },
+    "popover": {
+      "sources": "Sources",
+      "replacement": "Replacement",
+      "changeType": "Change type",
+      "selectType": "Select type",
+      "adjustSpan": "Adjust span"
+    },
+    "entityTypes": {
+      "PERSON": "Person",
+      "ADDRESS": "Address",
+      "EMAIL": "Email",
+      "PHONE_DACH": "Phone (DACH)",
+      "IBAN": "IBAN",
+      "DE_STEUER_ID": "Tax ID",
+      "DATE_OF_BIRTH": "Date of birth",
+      "DATE": "Date",
+      "FINANCIAL_AMOUNT": "Financial amount",
+      "COMPANY": "Company",
+      "LICENSE_PLATE": "License plate",
+      "HEALTH_INSURANCE_ID": "Health insurance ID",
+      "CITY": "City",
+      "COUNTRY": "Country"
+    },
+    "status": {
+      "addedmanual": "Manually added"
+    },
+    "delete": "Delete",
+    "confirmDelete": "Confirm delete",
+    "cancelDelete": "Cancel",
+    "occurrences": "{count}x",
+    "addPii": {
+      "title": "Add sensible data manually",
+      "instructions": "Select text in the document and choose a type.",
+      "noSelection": "No text selected. Highlight text in the document.",
+      "added": "Entity added successfully"
+    },
+    "entityList": {
+      "title": "Entities",
+      "empty": "No entities found"
+    },
+    "summary": {
+      "total": "Total"
+    },
+    "training": {
+      "title": "Reviewer onboarding",
+      "step": "Step {current} of {total}",
+      "back": "Back",
+      "next": "Next",
+      "complete": "Complete",
+      "intro": {
+        "heading": "What is personal data?",
+        "text1": "Personal data is any information relating to an identified or identifiable natural person (Art. 4(1) GDPR).",
+        "text2": "As a reviewer, you ensure that all personal data has been correctly detected and categorized before pseudonymization takes place."
+      },
+      "piiTypes": {
+        "heading": "Confidence color coding",
+        "text": "Entities are color-coded by detection confidence:",
+        "high": "High confidence — likely detected correctly",
+        "medium": "Medium confidence — please review carefully",
+        "low": "Low confidence — may be a false positive"
+      },
+      "manualAdd": {
+        "heading": "Adding sensible data manually",
+        "text1": "If automatic detection missed sensible data, you can add it manually:",
+        "step1": "Select the relevant text in the document",
+        "step2": "Choose the sensible data type in the sidebar",
+        "step3": "The entity will be added to the review list"
+      },
+      "automationBias": {
+        "heading": "Avoiding automation bias",
+        "warning": "Per EU AI Act Art. 14, human reviewers must critically evaluate AI results.",
+        "text1": "Do not blindly trust automatic detection. Read the entire text and watch for missed sensible data.",
+        "text2": "Review all entities carefully and remove false detections."
+      }
+    },
+    "completeReviewModal": {
+      "title": "Complete review",
+      "checkbox1": "I have reviewed and confirmed the detected entities.",
+      "checkbox2": "I will only paste the text into an Enterprise/API access with a Data Processing Agreement (DPA) — NOT into a consumer chat (e.g. ChatGPT Free, Gemini Free).",
+      "checkbox3": "I am aware that pseudonymized data may still constitute personal data under GDPR.",
+      "continueReview": "Continue review",
+      "endReview": "End review"
+    },
+    "workbench": {
+      "title": "Workbench",
+      "modeToggle": {
+        "verfremden": "Pseudonymize",
+        "klartext": "Restore cleartext"
+      },
+      "pseudoPanel": {
+        "title": "Pseudonymized",
+        "copyButton": "Copy pseudonymized text"
+      },
+      "zuordnung": {
+        "title": "Mapping",
+        "deleteAll": "Delete all",
+        "confirmDeleteAll": "Really delete?"
+      },
+      "originalPanel": {
+        "title": "Original"
+      },
+      "tabs": {
+        "entities": "Entities",
+        "rules": "Rules",
+        "export": "Export",
+        "mapping": "Mapping"
+      },
+      "export": {
+        "description": "Copy the pseudonymized text to your clipboard.",
+        "copyText": "Copy text to clipboard",
+        "copied": "Copied!",
+        "mappingTitle": "Token mapping",
+        "mappingDescription": "Mapping of original text to pseudonymization tokens. Edit tokens to change all occurrences.",
+        "originalColumn": "Original",
+        "tokenColumn": "Token",
+        "noMappings": "No token mappings available.",
+        "noEntities": "No entities detected."
+      },
+      "depseudo": {
+        "pseudonymizedLabel": "Pseudonymized",
+        "originalLabel": "De-Pseudonymized",
+        "inputLabel": "Paste AI output",
+        "inputPlaceholder": "Paste text containing tokens like [PERSON_001] ...",
+        "outputLabel": "De-pseudonymized result",
+        "replacedCount": "{count} tokens replaced",
+        "mappingTitle": "Token mapping",
+        "mappingDescription": "All pseudonymization tokens and their original values.",
+        "tokenColumn": "Token",
+        "originalColumn": "Original value",
+        "noMappings": "No mappings available.",
+        "copyOutput": "Copy de-pseudonymized text"
+      },
+      "header": {
+        "backToDashboard": "Dashboard",
+        "backToPlayground": "Playground",
+        "entities": "{count} entities",
+        "llmScan": "Scan with AI model",
+        "rescan": "Rescan (Regex/NER)",
+        "continueReview": "Continue review",
+        "completeReview": "Complete review"
+      },
+      "llmScan": {
+        "notConfiguredTitle": "AI Model Not Available",
+        "notConfiguredMessage": "The AI model is currently not configured.",
+        "title": "AI-powered detection",
+        "scanning": "Analyzing segment {current} of {total}...",
+        "completed": "{count} new entities found",
+        "noResults": "No additional personal data found.",
+        "apply": "Apply",
+        "close": "Close",
+        "cancel": "Cancel",
+        "cancelled": "Scan was cancelled.",
+        "error": "AI detection failed",
+        "instructionsLabel": "Instructions for the AI",
+        "startScan": "Start scan",
+        "detectionType": "Type",
+        "detectionText": "Text",
+        "detectionConfidence": "Confidence"
+      },
+      "rescan": {
+        "title": "Rescan with Regex/NER",
+        "scanning": "Rescanning segment {current} of {total}...",
+        "completed": "{count} new entities found",
+        "noResults": "No additional entities found by regex/NER rescan.",
+        "error": "Rescan failed"
+      },
+      "groupBy": {
+        "label": "Group by",
+        "type": "Type",
+        "severity": "Severity",
+        "page": "Page"
+      },
+      "rules": {
+        "title": "Detection rules",
+        "description": "Current detection configuration for this document.",
+        "nerToggle": "NER (Named Entity Recognition)",
+        "regexPhone": "Regex: Phone (DACH)",
+        "regexIds": "Regex: IDs / Tax IDs",
+        "reviewPolicy": "Review policy",
+        "autoAcceptLow": "Auto-accept LOW confidence",
+        "requireReviewHigh": "Require review for HIGH/MEDIUM"
+      },
+      "addByText": {
+        "button": "Add sensible data",
+        "placeholder": "Type text to find...",
+        "matchInfo": "{total} occurrences ({available} available)",
+        "addAll": "Add {count} as sensible data",
+        "klartextLabel": "Original text",
+        "verfremdetLabel": "Replacement",
+        "verfremdetPlaceholder": "Enter replacement text...",
+        "autoVerfremden": "Auto-generate replacement"
+      },
+      "search": {
+        "placeholder": "Search text...",
+        "matchCount": "{total} matches ({available} available)",
+        "addAll": "Add all as sensible data",
+        "noMatches": "No matches",
+        "close": "Close",
+        "prev": "Previous match",
+        "next": "Next match"
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: piigateway
+      POSTGRES_USER: piigateway
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme_dev_only}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U piigateway -d piigateway"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - piigateway
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - piigateway
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "${API_PORT:-5050}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__PostgreSQL: "Host=postgres;Port=5432;Database=piigateway;Username=piigateway;Password=${POSTGRES_PASSWORD:-changeme_dev_only}"
+      ConnectionStrings__Redis: "redis:6379"
+      Jwt__Secret: "${JWT_SECRET:-dev_secret_replace_in_production_minimum_64_characters_long!!}"
+      Jwt__Issuer: PiiGateway
+      Jwt__Audience: PiiGateway
+      PiiService__BaseUrl: "http://pii-service:8001"
+      Encryption__Key: "${ENCRYPTION_KEY:-dGhpcyBpcyBhIDMyIGJ5dGUga2V5ISEhMTIzNDU2Nzg=}"
+      Cors__AllowedOrigins: "http://localhost:8090,http://localhost:5173"
+    volumes:
+      - upload_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - piigateway
+
+  pii-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pii-service
+    environment:
+      LLM_BACKEND: ${LLM_BACKEND:-disabled}
+      MISTRAL_API_KEY: ${MISTRAL_API_KEY:-}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      NER_MODEL_NAME: ${NER_MODEL_NAME:-Davlan/bert-base-multilingual-cased-ner-hrl}
+      NER_DEVICE: ${NER_DEVICE:-cpu}
+      LAYER2_ENABLED: ${LAYER2_ENABLED:-true}
+    networks:
+      - piigateway
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    ports:
+      - "${FRONTEND_PORT:-8090}:5173"
+    environment:
+      VITE_API_PROXY_TARGET: "http://api:8080"
+    volumes:
+      - ./src/frontend/src:/app/src
+      - ./src/frontend/vite.config.ts:/app/vite.config.ts
+    networks:
+      - piigateway
+
+volumes:
+  postgres_data:
+  redis_data:
+  upload_data:
+
+networks:
+  piigateway:
+    driver: bridge
