@@ -44,11 +44,11 @@ export function useScrollSync() {
   const handleScrollA = createHandler(scrollElA, scrollElB)
   const handleScrollB = createHandler(scrollElB, scrollElA)
 
-  function bind(el: HTMLElement | null, handler: () => void) {
+  function bind(el: HTMLElement | null | undefined, handler: () => void) {
     if (el) el.addEventListener('scroll', handler, { passive: true })
   }
 
-  function unbind(el: HTMLElement | null, handler: () => void) {
+  function unbind(el: HTMLElement | null | undefined, handler: () => void) {
     if (el) el.removeEventListener('scroll', handler)
   }
 

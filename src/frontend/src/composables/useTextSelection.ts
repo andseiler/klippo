@@ -112,7 +112,7 @@ export function useTextSelection() {
     return -1
   }
 
-  function getOriginalOffset(root: Element, node: Node, offset: number): number {
+  function getOriginalOffset(_root: Element, node: Node, offset: number): number {
     // Walk text nodes, find the one containing our selection start,
     // then use data-offset-start from the parent span to compute original offset
     const textNode = node.nodeType === Node.TEXT_NODE ? node : node.childNodes[offset] || node

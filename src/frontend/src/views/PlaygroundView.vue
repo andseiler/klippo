@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onUnmounted, watch, type ComponentPublicInstance } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useFileUpload } from '../composables/useFileUpload'
 import { useEstimatedProgress } from '../composables/useEstimatedProgress'
@@ -31,7 +32,8 @@ const jobsStore = useJobsStore()
 const reviewStore = useReviewStore()
 const textSelection = useTextSelection()
 const estimatedProgress = useEstimatedProgress()
-const documentSearch = useDocumentSearch(reviewStore.segments, reviewStore.entities)
+const { segments: _segments, entities: _entities } = storeToRefs(reviewStore)
+const documentSearch = useDocumentSearch(_segments, _entities)
 const { scrollElA, scrollElB } = useScrollSync()
 
 const docViewerRef = ref<ComponentPublicInstance | null>(null)
@@ -59,9 +61,6 @@ const pastedText = ref('')
 const textDocName = ref('playground-doc')
 const submitting = ref(false)
 
-const textFileSize = computed(() =>
-  pastedText.value ? `${new Blob([pastedText.value]).size} B` : '0 B'
-)
 const hasTextContent = computed(() => pastedText.value.trim().length > 0)
 const hasInput = computed(() =>
   activeTab.value === 'file' ? !!file.value : hasTextContent.value

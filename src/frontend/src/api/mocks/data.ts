@@ -19,6 +19,7 @@ export function createMockJob(overrides: Partial<JobResponse> = {}): JobResponse
     processingStartedAt: null,
     reviewStartedAt: null,
     pseudonymizedAt: null,
+    errorMessage: null,
     ...overrides,
   }
 }

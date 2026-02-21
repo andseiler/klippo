@@ -14,7 +14,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const router = useRouter()
-const { t } = useI18n()
+const { t: _t } = useI18n()
 const jobsStore = useJobsStore()
 
 const isProcessing = computed(() => props.job.status === 'processing')

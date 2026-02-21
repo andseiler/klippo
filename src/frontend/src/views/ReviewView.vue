@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch, type ComponentPublicInstance } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useReviewStore } from '../stores/review'
 import { useJobsStore } from '../stores/jobs'
@@ -33,7 +34,8 @@ const jobsStore = useJobsStore()
 
 const { setupKeyboardNav, teardownKeyboardNav } = useReviewNavigation()
 const textSelection = useTextSelection()
-const documentSearch = useDocumentSearch(reviewStore.segments, reviewStore.entities)
+const { segments: _segments, entities: _entities } = storeToRefs(reviewStore)
+const documentSearch = useDocumentSearch(_segments, _entities)
 const training = useReviewerTraining()
 const { scrollElA, scrollElB } = useScrollSync()
 

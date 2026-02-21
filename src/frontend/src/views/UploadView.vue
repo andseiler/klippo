@@ -33,9 +33,6 @@ function generateRandomName(): string {
   return result
 }
 
-const textFileSize = computed(() =>
-  pastedText.value ? `${new Blob([pastedText.value]).size} B` : '0 B'
-)
 const hasTextContent = computed(() => pastedText.value.trim().length > 0)
 const hasInput = computed(() =>
   activeTab.value === 'file' ? !!file.value : hasTextContent.value
@@ -72,7 +69,7 @@ async function handleSubmit() {
   }, 200)
 
   try {
-    const job = await jobsStore.submitJob({
+    await jobsStore.submitJob({
       file: submitFile,
     })
     uploadProgress.value = 100
