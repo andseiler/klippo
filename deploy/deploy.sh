@@ -36,14 +36,9 @@ if [ "${SKIP_BUILD}" != "--skip-build" ]; then
     docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" build
 fi
 
-# 2b. Remove stale frontend dist volume so Docker re-populates from fresh image
-echo "==> Refreshing frontend assets..."
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" rm -sf frontend-build nginx
-docker volume rm docker_frontend_dist 2>/dev/null || true
-
 # 3. Start services (migrations auto-apply on API startup)
+#    frontend-build actively copies fresh assets into the shared volume on every start
 echo "==> Starting services..."
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d --force-recreate nginx frontend-build
 docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d
 
 # 5. Wait for health check
