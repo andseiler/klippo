@@ -202,8 +202,8 @@ chmod +x docker/certbot-init.sh
 **What this does:**
 - Runs certbot in standalone mode on port 80
 - Obtains a Let's Encrypt SSL certificate
-- Stores the cert in a Docker named volume (shared with nginx)
-- Certificate auto-renews via the certbot container in docker-compose
+- Stores the cert in a Docker named volume (shared with nginx and certbot containers)
+- Does **not** start services — that happens in Step 8
 
 > **Troubleshooting:** If this fails, verify that:
 > - DNS A record points to this server (`dig +short YOUR_DOMAIN`)

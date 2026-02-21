@@ -35,9 +35,5 @@ docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" run --rm \
   -d "${DOMAIN}" \
   --preferred-challenges http
 
-echo "==> Certificate obtained successfully"
-echo "==> Starting all services..."
-
-docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" up -d
-
-echo "==> Done! SSL is now active for https://${DOMAIN}"
+echo "==> Certificate obtained successfully for ${DOMAIN}"
+echo "==> Run deploy.sh to start all services."
