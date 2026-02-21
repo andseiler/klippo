@@ -50,8 +50,8 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
     ATTEMPT=$((ATTEMPT + 1))
     sleep 2
 
-    STATUS=$(docker compose -f "${COMPOSE_FILE}" --env-file "${ENV_FILE}" \
-        exec -T api curl -sf http://localhost:8080/api/v1/health 2>/dev/null | \
+    # Health check via nginx (port 80/443 exposed to host)
+    STATUS=$(curl -sf http://localhost/api/v1/health 2>/dev/null | \
         grep -o '"status":"[^"]*"' | head -1 || echo "")
 
     if echo "${STATUS}" | grep -q "healthy"; then
