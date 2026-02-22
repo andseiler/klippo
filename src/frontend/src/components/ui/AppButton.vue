@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost'
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
   disabled?: boolean

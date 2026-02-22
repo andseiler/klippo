@@ -40,12 +40,6 @@ export function useReviewerTraining() {
     isTrainingModalOpen.value = false
   }
 
-  function resetTraining() {
-    localStorage.removeItem(getStorageKey())
-    trainingStep.value = 1
-    isTrainingModalOpen.value = true
-  }
-
   return {
     trainingStep,
     totalSteps,
@@ -55,6 +49,5 @@ export function useReviewerTraining() {
     nextStep,
     prevStep,
     completeTraining,
-    resetTraining,
   }
 }

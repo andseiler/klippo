@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   'update:open': [value: boolean]
-  scanComplete: []
 }>()
 
 const { t, locale } = useI18n()
@@ -165,7 +164,6 @@ async function handleApply() {
     }
     // Close modal BEFORE refetch — fetchReviewData sets loading=true,
     // which unmounts this component via v-if/v-else in the parent
-    emit('scanComplete')
     emit('update:open', false)
     await reviewStore.fetchReviewData(props.jobId)
   } finally {

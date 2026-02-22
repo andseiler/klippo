@@ -18,14 +18,6 @@ import type {
 } from '../api/types'
 
 export type ViewMode = 'pseudonymized' | 'depseudonymized'
-export type EntityGroupBy = 'type' | 'severity' | 'page'
-
-export interface DistinctEntityGroup {
-  key: string // `${text.toLowerCase()}::${entityType}`
-  representative: EntityDto
-  occurrences: EntityDto[]
-  count: number
-}
 
 export const useReviewStore = defineStore('review', () => {
   // State
@@ -46,10 +38,8 @@ export const useReviewStore = defineStore('review', () => {
   const error = ref<string | null>(null)
   const saving = ref(false)
   const activeEntityId = ref<string | null>(null)
-  const trainingCompleted = ref(false)
   const viewMode = ref<ViewMode>('pseudonymized')
   const reviewCompleted = ref(false)
-  const entityGroupBy = ref<EntityGroupBy>('type')
   const fileName = ref('')
   const completeReviewLoading = ref(false)
   const depseudoInputText = ref('')
@@ -62,49 +52,6 @@ export const useReviewStore = defineStore('review', () => {
   const activeEntityToken = computed(() => {
     if (!activeEntity.value?.replacementPreview) return null
     return activeEntity.value.replacementPreview
-  })
-
-  // Active entities = all entities (deleted ones are removed from array)
-  const activeEntities = computed(() => entities.value)
-
-  // Deduplicate active entities by (text, entityType)
-  const distinctEntities = computed<DistinctEntityGroup[]>(() => {
-    const map = new Map<string, DistinctEntityGroup>()
-    for (const entity of activeEntities.value) {
-      const key = `${entity.text.toLowerCase()}::${entity.entityType}`
-      const existing = map.get(key)
-      if (existing) {
-        existing.occurrences.push(entity)
-        existing.count++
-      } else {
-        map.set(key, { key, representative: entity, occurrences: [entity], count: 1 })
-      }
-    }
-    return Array.from(map.values())
-  })
-
-  // Group distinct entities by current groupBy setting
-  const groupedDistinctEntities = computed(() => {
-    const map = new Map<string, DistinctEntityGroup[]>()
-    for (const group of distinctEntities.value) {
-      let groupKey: string
-      switch (entityGroupBy.value) {
-        case 'severity':
-          groupKey = group.representative.confidenceTier
-          break
-        case 'page': {
-          const seg = segments.value.find((s) => s.id === group.representative.segmentId)
-          groupKey = seg ? `Segment ${seg.segmentIndex + 1}` : 'Unknown'
-          break
-        }
-        default:
-          groupKey = group.representative.entityType
-      }
-      const list = map.get(groupKey) || []
-      list.push(group)
-      map.set(groupKey, list)
-    }
-    return map
   })
 
   // Highlight all occurrences of the same PII when one is active
@@ -123,15 +70,6 @@ export const useReviewStore = defineStore('review', () => {
     )
   })
 
-  const activeEntityGroup = computed(() => {
-    if (!activeEntityId.value) return null
-    return (
-      distinctEntities.value.find((g) =>
-        g.occurrences.some((e) => e.id === activeEntityId.value),
-      ) ?? null
-    )
-  })
-
   const entitiesBySegment = computed(() => {
     const map = new Map<string, EntityDto[]>()
     for (const entity of entities.value) {
@@ -145,7 +83,7 @@ export const useReviewStore = defineStore('review', () => {
   // Token mapping: replacement token → { originals, entityType, count }
   const pseudoTokenMappings = computed(() => {
     const map = new Map<string, { originals: string[]; entityType: string; count: number }>()
-    for (const entity of activeEntities.value) {
+    for (const entity of entities.value) {
       if (!entity.replacementPreview) continue
       const existing = map.get(entity.replacementPreview)
       if (existing) {
@@ -183,15 +121,10 @@ export const useReviewStore = defineStore('review', () => {
     }).join('\n\n')
   })
 
-  // Build full original text (just concatenate segment text)
-  const originalFullText = computed(() =>
-    segments.value.map(s => s.textContent).join('\n\n')
-  )
-
   // De-pseudonymization: reverse map from replacement token → original value + entity type
   const depseudoReplacementMap = computed(() => {
     const map = new Map<string, { original: string; entityType: string }>()
-    for (const entity of activeEntities.value) {
+    for (const entity of entities.value) {
       if (entity.replacementPreview && !map.has(entity.replacementPreview)) {
         map.set(entity.replacementPreview, {
           original: entity.text,
@@ -282,32 +215,6 @@ export const useReviewStore = defineStore('review', () => {
       error.value = e instanceof Error ? e.message : 'Failed to load review data'
     } finally {
       loading.value = false
-    }
-  }
-
-  // Delete a distinct entity group (hard-delete all occurrences via API)
-  async function deleteEntityGroup(groupKey: string) {
-    const group = distinctEntities.value.find((g) => g.key === groupKey)
-    if (!group) return
-    // Optimistic update: remove entities from local array
-    const idsToDelete = new Set(group.occurrences.map((e) => e.id))
-    entities.value = entities.value.filter((e) => !idsToDelete.has(e.id))
-    if (activeEntityId.value && idsToDelete.has(activeEntityId.value)) {
-      activeEntityId.value = null
-    }
-    recomputeSummary()
-    saving.value = true
-    try {
-      await Promise.all(
-        Array.from(idsToDelete).map((eid) => deleteEntity(jobId.value, eid)),
-      )
-      if (status.value === 'pseudonymized') {
-        await fetchReviewData(jobId.value)
-      }
-    } catch {
-      await fetchReviewData(jobId.value)
-    } finally {
-      saving.value = false
     }
   }
 
@@ -484,12 +391,8 @@ export const useReviewStore = defineStore('review', () => {
     viewMode.value = mode
   }
 
-  function setEntityGroupBy(groupBy: EntityGroupBy) {
-    entityGroupBy.value = groupBy
-  }
-
   function navigateToNextEntity() {
-    const active = activeEntities.value
+    const active = entities.value
     if (active.length === 0) return null
 
     const currentIdx = activeEntityId.value
@@ -502,7 +405,7 @@ export const useReviewStore = defineStore('review', () => {
   }
 
   function navigateToPrevEntity() {
-    const active = activeEntities.value
+    const active = entities.value
     if (active.length === 0) return null
 
     const currentIdx = activeEntityId.value
@@ -601,7 +504,6 @@ export const useReviewStore = defineStore('review', () => {
     activeEntityId.value = null
     viewMode.value = 'pseudonymized'
     reviewCompleted.value = false
-    entityGroupBy.value = 'type'
     fileName.value = ''
     completeReviewLoading.value = false
     depseudoInputText.value = ''
@@ -618,24 +520,17 @@ export const useReviewStore = defineStore('review', () => {
     error,
     saving,
     activeEntityId,
-    trainingCompleted,
     viewMode,
     reviewCompleted,
-    entityGroupBy,
     fileName,
     completeReviewLoading,
     // Computed
     activeEntity,
     activeEntityToken,
-    activeEntities,
-    distinctEntities,
-    groupedDistinctEntities,
     highlightedEntityIds,
-    activeEntityGroup,
     entitiesBySegment,
     pseudoTokenMappings,
     pseudonymizedFullText,
-    originalFullText,
     depseudoInputText,
     depseudoReplacementMap,
     depseudoOutputFragments,
@@ -643,7 +538,6 @@ export const useReviewStore = defineStore('review', () => {
     depseudoStats,
     // Actions
     fetchReviewData,
-    deleteEntityGroup,
     deleteByToken,
     deleteAllEntities,
     changeEntityType,
@@ -653,7 +547,6 @@ export const useReviewStore = defineStore('review', () => {
     submitReopenReview,
     setActiveEntity,
     setViewMode,
-    setEntityGroupBy,
     navigateToNextEntity,
     navigateToPrevEntity,
     updateSegmentText,

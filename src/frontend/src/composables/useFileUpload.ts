@@ -5,7 +5,6 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50 MB
 export function useFileUpload() {
   const file = ref<File | null>(null)
   const validationError = ref<string | null>(null)
-  const isDragging = ref(false)
 
   function validateFile(f: File): boolean {
     validationError.value = null
@@ -40,7 +39,6 @@ export function useFileUpload() {
   return {
     file,
     validationError,
-    isDragging,
     selectFile,
     clearFile,
     formattedSize,

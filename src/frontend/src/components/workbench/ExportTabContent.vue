@@ -41,7 +41,7 @@ async function copyToClipboard() {
       <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
         {{ t('review.workbench.export.mappingDescription') }}
       </p>
-      <TokenMappingTable :show-delete="true" />
+      <TokenMappingTable />
     </div>
   </div>
 </template>

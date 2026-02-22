@@ -37,7 +37,7 @@ const estimatedProgress = useEstimatedProgress()
 const { segments: _segments, entities: _entities } = storeToRefs(reviewStore)
 const documentSearch = useDocumentSearch(_segments, _entities)
 const { scrollElA, scrollElB } = useScrollSync()
-const { isCollapsible, isPanelExpanded, togglePanel } = useCollapsiblePanels()
+useCollapsiblePanels()
 
 const docViewerRef = ref<ComponentPublicInstance | null>(null)
 const pseudoPanelRef = ref<ComponentPublicInstance | null>(null)

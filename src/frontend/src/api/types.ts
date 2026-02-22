@@ -23,10 +23,6 @@ export interface AuthResponse {
   name: string
 }
 
-export interface RefreshTokenRequest {
-  refreshToken: string
-}
-
 export interface JobResponse {
   id: string
   createdById: string
@@ -53,33 +49,6 @@ export interface JobListResponse {
 export interface CreateJobRequest {
   file: File
 }
-
-export type AllowedFileType = {
-  mime: string
-  extension: string
-}
-
-export const ALLOWED_MIME_TYPES = [
-  'application/pdf',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'text/plain',
-  'image/png',
-  'image/jpeg',
-  'image/tiff',
-] as const
-
-export const ALLOWED_EXTENSIONS = [
-  '.pdf',
-  '.docx',
-  '.xlsx',
-  '.txt',
-  '.png',
-  '.jpg',
-  '.jpeg',
-  '.tiff',
-  '.tif',
-] as const
 
 export interface UpdateJobRequest {
   fileName?: string
@@ -145,22 +114,6 @@ export interface AddEntityRequest {
   startOffset: number
   endOffset: number
   replacementText?: string
-}
-
-export interface AuditEntryDto {
-  id: number
-  timestamp: string
-  actorId: string | null
-  actionType: string
-  entityType: string | null
-  entityHash: string | null
-  confidence: number | null
-  detectionSource: string | null
-  metadata: string | null
-}
-
-export interface AuditLogResponse {
-  entries: AuditEntryDto[]
 }
 
 // LLM Scan types

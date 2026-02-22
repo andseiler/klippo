@@ -145,10 +145,6 @@ export function useTextSelection() {
 
   return {
     selectedText,
-    selectedSegmentId,
-    selectedStartOffset,
-    selectedEndOffset,
-    selectionPosition,
     hasSelection,
     clearSelection,
     handleMouseUp,

@@ -66,9 +66,9 @@ const showLlmScanButton = computed(() => POST_PROCESSING_STATUSES.includes(props
 </script>
 
 <template>
-  <header class="flex flex-col md:flex-row md:items-center gap-2 md:gap-3 px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
+  <header class="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-3 px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
     <!-- Top row: back, filename, status, actions -->
-    <div class="flex items-center gap-2 md:gap-3 min-w-0">
+    <div class="flex items-center gap-2 lg:gap-3 min-w-0">
       <!-- Back button -->
       <AppButton v-if="playground" variant="ghost" size="sm" class="flex-shrink-0" @click="emit('back')">
         &larr; <span class="hidden sm:inline">{{ t('review.workbench.header.backToPlayground') }}</span>
@@ -105,10 +105,10 @@ const showLlmScanButton = computed(() => POST_PROCESSING_STATUSES.includes(props
       </span>
 
       <!-- Spacer (push actions right on desktop) -->
-      <div class="hidden md:flex flex-1" />
+      <div class="hidden lg:flex flex-1" />
 
       <!-- Desktop mode toggle -->
-      <div class="hidden md:flex md:justify-center">
+      <div class="hidden lg:flex lg:justify-center">
         <WorkbenchModeToggle
           :mode="displayMode"
           @update:mode="emit('update:displayMode', $event)"
@@ -116,7 +116,7 @@ const showLlmScanButton = computed(() => POST_PROCESSING_STATUSES.includes(props
       </div>
 
       <!-- Compact stats -->
-      <div class="hidden md:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+      <div class="hidden lg:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
         <span>{{ t('review.workbench.header.entities', { count: summary.totalEntities }) }}</span>
       </div>
 
@@ -144,7 +144,7 @@ const showLlmScanButton = computed(() => POST_PROCESSING_STATUSES.includes(props
     </div>
 
     <!-- Mobile mode toggle (2nd row) -->
-    <div class="flex justify-center md:hidden">
+    <div class="flex justify-center lg:hidden">
       <WorkbenchModeToggle
         :mode="displayMode"
         @update:mode="emit('update:displayMode', $event)"
