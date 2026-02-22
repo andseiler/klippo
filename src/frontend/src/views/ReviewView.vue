@@ -137,7 +137,6 @@ function handleDisplayModeUpdate(mode: ViewMode) {
         :job-id="id"
         :file-name="reviewStore.fileName || id"
         :status="reviewStore.status || (jobsStore.currentJob?.status ?? '')"
-        :summary="reviewStore.summary"
         :saving="reviewStore.saving || reviewStore.completeReviewLoading"
         :display-mode="reviewStore.viewMode"
         @llm-scan="handleLlmScan"

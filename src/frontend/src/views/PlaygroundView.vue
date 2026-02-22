@@ -413,7 +413,6 @@ onUnmounted(() => {
           :job-id="jobId"
           :file-name="reviewStore.fileName || jobId"
           :status="reviewStore.status || (jobsStore.currentJob?.status ?? '')"
-          :summary="reviewStore.summary"
           :saving="reviewStore.saving || reviewStore.completeReviewLoading"
           :display-mode="reviewStore.viewMode"
           back-to="/playground"
