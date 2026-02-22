@@ -78,14 +78,13 @@ const showLlmNotConfiguredModal = ref(false)
 const cancelling = ref(false)
 
 async function ensureGuestToken() {
-  // Save existing token if logged in
-  const existingToken = localStorage.getItem('accessToken')
-  if (existingToken) {
-    localStorage.setItem('previousToken', existingToken)
-  }
-
   try {
     const auth = await guestAuth()
+    // Only swap tokens AFTER successful guestAuth
+    const existingToken = localStorage.getItem('accessToken')
+    if (existingToken && localStorage.getItem('isGuest') !== 'true') {
+      localStorage.setItem('previousToken', existingToken)
+    }
     localStorage.setItem('accessToken', auth.accessToken)
     localStorage.setItem('isGuest', 'true')
   } catch (e: unknown) {
@@ -94,6 +93,10 @@ async function ensureGuestToken() {
       if (axiosError.response?.status === 429) {
         error.value = t('playground.dailyLimitReached')
         throw new Error('Daily limit reached')
+      }
+      if (axiosError.response?.status === 503) {
+        error.value = t('playground.serviceUnavailable')
+        throw new Error('Service unavailable')
       }
     }
     error.value = t('playground.guestError')
@@ -138,7 +141,12 @@ async function handleSubmit() {
     startPolling()
   } catch (e) {
     if (!error.value) {
-      error.value = e instanceof Error ? e.message : t('playground.guestError')
+      if (e && typeof e === 'object' && 'response' in e) {
+        const axiosError = e as { response?: { data?: { message?: string }, status?: number } }
+        error.value = axiosError.response?.data?.message || t('playground.guestError')
+      } else {
+        error.value = e instanceof Error ? e.message : t('playground.guestError')
+      }
     }
   } finally {
     submitting.value = false
@@ -260,6 +268,7 @@ async function handleUpdateFileName(newName: string) {
 onUnmounted(() => {
   stopPolling()
   reviewStore.resetReviewState()
+  restoreToken()
 })
 </script>
 

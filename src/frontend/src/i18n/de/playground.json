@@ -39,6 +39,7 @@
     "cancelled": "Verarbeitung wurde abgebrochen.",
     "startOver": "Neu starten",
     "guestError": "Gastsitzung konnte nicht gestartet werden. Bitte später erneut versuchen.",
-    "dailyLimitReached": "Tageslimit erreicht. Für vollen Zugang schreiben Sie an mail@andreas-seiler.net"
+    "dailyLimitReached": "Tageslimit erreicht. Für vollen Zugang schreiben Sie an mail@andreas-seiler.net",
+    "serviceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte später erneut versuchen."
   }
 }

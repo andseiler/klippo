@@ -39,6 +39,7 @@
     "cancelled": "Processing was cancelled.",
     "startOver": "Start over",
     "guestError": "Could not start a guest session. Please try again later.",
-    "dailyLimitReached": "Daily limit reached. For full access, contact mail@andreas-seiler.net"
+    "dailyLimitReached": "Daily limit reached. For full access, contact mail@andreas-seiler.net",
+    "serviceUnavailable": "Service temporarily unavailable. Please try again later."
   }
 }
