@@ -206,6 +206,8 @@ function restoreToken() {
   const prev = localStorage.getItem('previousToken')
   if (prev) {
     localStorage.setItem('accessToken', prev)
+  } else {
+    localStorage.removeItem('accessToken')
   }
   localStorage.removeItem('previousToken')
   localStorage.removeItem('isGuest')
@@ -268,7 +270,9 @@ async function handleUpdateFileName(newName: string) {
 onUnmounted(() => {
   stopPolling()
   reviewStore.resetReviewState()
-  restoreToken()
+  if (localStorage.getItem('isGuest') === 'true') {
+    restoreToken()
+  }
 })
 </script>
 
