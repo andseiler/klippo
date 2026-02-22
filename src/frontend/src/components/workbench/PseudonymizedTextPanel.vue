@@ -70,12 +70,7 @@ function handleActionClick() {
         size="sm"
         @click="handleActionClick"
       >
-        <template v-if="reviewStore.reviewCompleted">
-          {{ copied ? t('review.workbench.export.copied') : t('review.workbench.pseudoPanel.copyButton') }}
-        </template>
-        <template v-else>
-          {{ t('review.workbench.header.completeReview') }}
-        </template>
+        {{ copied ? t('review.workbench.export.copied') : t('review.workbench.pseudoPanel.copyButton') }}
       </AppButton>
     </div>
 
