@@ -3,23 +3,39 @@
     "title": "Klippo ausprobieren",
     "subtitle": "Beta — Verfremden Sie Texte und Dokumente, damit Sie KI-Chatbots nutzen können, ohne persönliche Daten preiszugeben. Daten werden nach 1 Stunde gelöscht.",
     "description": "Laden Sie ein Dokument hoch oder fügen Sie Text ein. Klippo erkennt Namen, Adressen, Telefonnummern und weitere personenbezogene Daten und ersetzt sie durch Pseudonyme.",
+    "heroTitle": "Du willst KI nutzen – aber nicht deine Kundendaten mitschicken.",
+    "heroDescription": "Klippo macht aus deinem Text eine Version, die du leichter in Chatbots kopieren kannst: Namen, Adressen, Telefonnummern und ähnliche Dinge werden durch Platzhalter ersetzt.",
+    "howItWorks": {
+      "title": "So läuft's",
+      "description": "Text oder Dokument hochladen → Klippo erkennt personenbezogene Daten (Namen, Adressen, Telefonnummern …) → Du bekommst eine verfremdete Version, die du in ChatGPT & Co. kopieren kannst."
+    },
     "betaNotice": "Dies ist eine Beta-Version von Klippo.",
     "betaAccount": "Für einen vollständigen Zugang schreiben Sie an",
-    "betaTechnical": "Klippo wird vollständig in Deutschland (Hetzner) gehostet. Die PII-Erkennung erfolgt lokal auf dem Server mittels Regex und Named Entity Recognition (NER). Kein externer Dienst sieht Ihre Daten. Optional kann ein lokales LLM zur erweiterten Erkennung eingesetzt werden.",
+    "betaTechnical": "Die Inhalte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist – und danach automatisch gelöscht (Standard: nach 1 Stunde).",
+    "about": {
+      "title": "Über mich",
+      "description": "Ich bin Andreas Seiler, Software-Entwickler. Ich baue Klippo, weil ich glaube, dass man KI produktiv nutzen kann, ohne sensible Daten preiszugeben.",
+      "viewProfile": "Mein Profil"
+    },
+    "fullAccess": {
+      "title": "Vollzugang anfragen",
+      "description": "Schreib kurz, wofür du Klippo nutzen willst. Kein direktes Signup – ich melde mich persönlich.",
+      "cta": "Zugang anfragen"
+    },
     "tabs": {
       "file": "Datei hochladen",
       "text": "Text eingeben"
     },
     "submit": "Erkennung starten",
-    "submitting": "Wird verarbeitet\u2026",
+    "submitting": "Wird verarbeitet…",
     "processing": {
-      "title": "Dokument wird verarbeitet\u2026",
+      "title": "Dokument wird verarbeitet…",
       "description": "Die Erkennung läuft. Das dauert normalerweise einige Sekunden.",
       "elapsed": "{seconds}s vergangen"
     },
     "failed": "Verarbeitung fehlgeschlagen. Bitte erneut versuchen.",
     "cancel": "Abbrechen",
-    "cancelling": "Wird abgebrochen\u2026",
+    "cancelling": "Wird abgebrochen…",
     "cancelled": "Verarbeitung wurde abgebrochen.",
     "startOver": "Neu starten",
     "guestError": "Gastsitzung konnte nicht gestartet werden. Bitte später erneut versuchen.",

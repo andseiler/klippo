@@ -3,23 +3,39 @@
     "title": "Klippo Playground",
     "subtitle": "Beta — Pseudonymize texts and documents so you can use AI chatbots without exposing personal data. Data is deleted after 1 hour.",
     "description": "Upload a document or paste text. Klippo detects names, addresses, phone numbers, and other personal data and replaces them with pseudonyms.",
+    "heroTitle": "You want to use AI – but not send your customer data along.",
+    "heroDescription": "Klippo turns your text into a version you can easily copy into chatbots: names, addresses, phone numbers, and similar details are replaced with placeholders.",
+    "howItWorks": {
+      "title": "How it works",
+      "description": "Upload text or a document → Klippo detects personal data (names, addresses, phone numbers …) → You get a pseudonymized version you can copy into ChatGPT & co."
+    },
     "betaNotice": "This is a beta version of Klippo.",
     "betaAccount": "For full access, contact",
-    "betaTechnical": "Klippo is fully hosted in Germany (Hetzner). PII detection runs locally on the server using regex and Named Entity Recognition (NER). No external service sees your data. An optional local LLM can be used for enhanced detection.",
+    "betaTechnical": "Content is only stored as long as needed for processing – and then automatically deleted (default: after 1 hour).",
+    "about": {
+      "title": "About me",
+      "description": "I'm Andreas Seiler, software developer. I'm building Klippo because I believe you can use AI productively without exposing sensitive data.",
+      "viewProfile": "My profile"
+    },
+    "fullAccess": {
+      "title": "Request full access",
+      "description": "Drop a quick note about what you'd use Klippo for. No direct signup – I'll get back to you personally.",
+      "cta": "Request access"
+    },
     "tabs": {
       "file": "Upload file",
       "text": "Enter text"
     },
     "submit": "Start detection",
-    "submitting": "Processing\u2026",
+    "submitting": "Processing…",
     "processing": {
-      "title": "Processing your document\u2026",
+      "title": "Processing your document…",
       "description": "Detection is running. This usually takes a few seconds.",
       "elapsed": "{seconds}s elapsed"
     },
     "failed": "Processing failed. Please try again.",
     "cancel": "Cancel",
-    "cancelling": "Cancelling\u2026",
+    "cancelling": "Cancelling…",
     "cancelled": "Processing was cancelled.",
     "startOver": "Start over",
     "guestError": "Could not start a guest session. Please try again later.",

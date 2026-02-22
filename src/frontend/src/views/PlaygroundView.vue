@@ -264,25 +264,40 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col h-screen bg-slate-50 dark:bg-gray-950">
-    <!-- Phase 1: Upload -->
+  <div :class="['flex flex-col bg-slate-50 dark:bg-gray-950', phase !== 'upload' ? 'h-screen' : 'min-h-screen']">
+    <!-- Phase 1: Upload (Landing Page) -->
     <template v-if="phase === 'upload'">
-      <div class="relative max-w-2xl mx-auto w-full px-4 py-8 space-y-6">
-        <div class="absolute top-4 right-4">
-          <LanguageToggle />
-        </div>
+      <div class="max-w-5xl mx-auto w-full px-4 py-6 space-y-8">
+
+        <!-- a) Header bar -->
+        <header class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">K</div>
+            <span class="font-bold text-gray-900 dark:text-gray-100">Klippo</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <a href="https://andreas-seiler.net" target="_blank" rel="noopener" class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hidden sm:inline">andreas-seiler.net</a>
+            <LanguageToggle />
+          </div>
+        </header>
+
+        <!-- b) Hero -->
         <div>
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {{ t('playground.title') }}
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+            {{ t('playground.heroTitle') }}
           </h1>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ t('playground.subtitle') }}
-          </p>
-          <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-            {{ t('playground.description') }}
+          <p class="mt-3 text-base text-gray-600 dark:text-gray-400">
+            {{ t('playground.heroDescription') }}
           </p>
         </div>
 
+        <!-- c) How it works card -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ t('playground.howItWorks.title') }}</h2>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.howItWorks.description') }}</p>
+        </div>
+
+        <!-- d) Beta notice -->
         <AppAlert variant="info" class="text-sm">
           <p class="font-medium">{{ t('playground.betaNotice') }}</p>
           <p class="mt-1">
@@ -296,72 +311,114 @@ onUnmounted(() => {
           </p>
         </AppAlert>
 
-        <!-- Tab bar -->
-        <div class="flex border-b border-gray-200 dark:border-gray-700">
-          <button
-            :class="[
-              'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
-              activeTab === 'file'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
-            ]"
-            @click="activeTab = 'file'"
-          >
-            {{ t('playground.tabs.file') }}
-          </button>
-          <button
-            :class="[
-              'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
-              activeTab === 'text'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
-            ]"
-            @click="activeTab = 'text'"
-          >
-            {{ t('playground.tabs.text') }}
-          </button>
-        </div>
-
-        <!-- File tab -->
-        <div v-if="activeTab === 'file'">
-          <div v-if="!file">
-            <FileDropZone @file-selected="selectFile" />
-            <AppAlert v-if="validationError" variant="error" class="mt-3">
-              {{ t(`upload.${validationError}`) }}
-            </AppAlert>
+        <!-- e) Upload area -->
+        <div class="space-y-4">
+          <!-- Tab bar -->
+          <div class="flex border-b border-gray-200 dark:border-gray-700">
+            <button
+              :class="[
+                'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                activeTab === 'file'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+              ]"
+              @click="activeTab = 'file'"
+            >
+              {{ t('playground.tabs.file') }}
+            </button>
+            <button
+              :class="[
+                'px-4 py-2 text-sm font-medium border-b-2 transition-colors',
+                activeTab === 'text'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',
+              ]"
+              @click="activeTab = 'text'"
+            >
+              {{ t('playground.tabs.text') }}
+            </button>
           </div>
-          <div v-else class="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-            <div>
-              <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ file.name }}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">{{ formattedSize }}</p>
+
+          <!-- File tab -->
+          <div v-if="activeTab === 'file'">
+            <div v-if="!file">
+              <FileDropZone @file-selected="selectFile" />
+              <AppAlert v-if="validationError" variant="error" class="mt-3">
+                {{ t(`upload.${validationError}`) }}
+              </AppAlert>
             </div>
-            <AppButton variant="ghost" size="sm" @click="clearFile">
-              {{ t('common.reset') }}
+            <div v-else class="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+              <div>
+                <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ file.name }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ formattedSize }}</p>
+              </div>
+              <AppButton variant="ghost" size="sm" @click="clearFile">
+                {{ t('common.reset') }}
+              </AppButton>
+            </div>
+          </div>
+
+          <!-- Text tab -->
+          <div v-if="activeTab === 'text'" class="space-y-4">
+            <textarea
+              v-model="pastedText"
+              :placeholder="t('upload.textInput.textPlaceholder')"
+              class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-4 text-sm text-gray-900 dark:text-gray-100 leading-relaxed resize-y min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Submit -->
+          <div v-if="hasInput">
+            <AppAlert v-if="error" variant="error" class="mb-4">{{ error }}</AppAlert>
+            <AppButton
+              :loading="submitting"
+              :disabled="submitting"
+              class="w-full"
+              @click="handleSubmit"
+            >
+              {{ submitting ? t('playground.submitting') : t('playground.submit') }}
             </AppButton>
           </div>
         </div>
 
-        <!-- Text tab -->
-        <div v-if="activeTab === 'text'" class="space-y-4">
-          <textarea
-            v-model="pastedText"
-            :placeholder="t('upload.textInput.textPlaceholder')"
-            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-4 text-sm text-gray-900 dark:text-gray-100 leading-relaxed resize-y min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
+        <!-- f) About Andreas card -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div class="flex flex-col sm:flex-row gap-6">
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ t('playground.about.title') }}</h2>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.about.description') }}</p>
+              <div class="mt-4 flex flex-wrap gap-3">
+                <a href="https://andreas-seiler.net" target="_blank" rel="noopener">
+                  <AppButton variant="secondary" size="sm">{{ t('playground.about.viewProfile') }}</AppButton>
+                </a>
+                <a href="mailto:mail@andreas-seiler.net">
+                  <AppButton variant="primary" size="sm">mail@andreas-seiler.net</AppButton>
+                </a>
+              </div>
+            </div>
+            <div class="flex-shrink-0 flex items-start justify-center sm:justify-end">
+              <img
+                src="https://andreas-seiler.net/profilfoto.jpg"
+                alt="Andreas Seiler"
+                class="w-24 h-24 rounded-full object-cover"
+              />
+            </div>
+          </div>
         </div>
 
-        <!-- Submit -->
-        <div v-if="hasInput">
-          <AppAlert v-if="error" variant="error" class="mb-4">{{ error }}</AppAlert>
-          <AppButton
-            :loading="submitting"
-            :disabled="submitting"
-            class="w-full"
-            @click="handleSubmit"
-          >
-            {{ submitting ? t('playground.submitting') : t('playground.submit') }}
-          </AppButton>
+        <!-- g) Full access card -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex-1">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ t('playground.fullAccess.title') }}</h2>
+              <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.fullAccess.description') }}</p>
+            </div>
+            <a href="mailto:mail@andreas-seiler.net" class="flex-shrink-0">
+              <AppButton variant="primary">{{ t('playground.fullAccess.cta') }}</AppButton>
+            </a>
+          </div>
         </div>
+
       </div>
     </template>
 
