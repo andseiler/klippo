@@ -10,8 +10,6 @@ export type JobStatus =
   | 'failed'
   | 'cancelled'
 
-export type UserRole = 'Admin' | 'Reviewer' | 'User'
-
 export interface LoginRequest {
   email: string
   password: string
@@ -23,8 +21,6 @@ export interface AuthResponse {
   userId: string
   email: string
   name: string
-  role: UserRole
-  organizationId: string
 }
 
 export interface RefreshTokenRequest {
@@ -33,7 +29,6 @@ export interface RefreshTokenRequest {
 
 export interface JobResponse {
   id: string
-  organizationId: string
   createdById: string
   status: JobStatus
   fileName: string

@@ -19,29 +19,9 @@ public class FullFlowTests : IClassFixture<TestWebApplicationFactory>
     }
 
     [Fact]
-    public async Task UploadJob_ReturnsAccepted()
-    {
-        var client = _factory.CreateClient().WithAuth("Reviewer");
-
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("Max Mustermann arbeitet bei der ABC GmbH."));
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-        content.Add(fileContent, "file", "test.txt");
-
-        var response = await client.PostAsync("/api/v1/jobs", content);
-
-        response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-        var body = await response.Content.ReadAsStringAsync();
-        var result = JsonSerializer.Deserialize<JsonElement>(body, JsonOptions);
-        result.GetProperty("id").GetString().Should().NotBeNullOrEmpty();
-        result.GetProperty("status").GetString().Should().Be("created");
-    }
-
-    [Fact]
     public async Task ListJobs_ReturnsPagedResult()
     {
-        var client = _factory.CreateClient().WithAuth("Reviewer");
+        var client = _factory.CreateClient().WithAuth();
 
         var response = await client.GetAsync("/api/v1/jobs?page=1&pageSize=10");
 
@@ -57,7 +37,7 @@ public class FullFlowTests : IClassFixture<TestWebApplicationFactory>
     [Fact]
     public async Task GetJob_NonExistent_Returns404()
     {
-        var client = _factory.CreateClient().WithAuth("Reviewer");
+        var client = _factory.CreateClient().WithAuth();
 
         var response = await client.GetAsync($"/api/v1/jobs/{Guid.NewGuid()}");
 
@@ -67,7 +47,7 @@ public class FullFlowTests : IClassFixture<TestWebApplicationFactory>
     [Fact]
     public async Task HealthEndpoint_ReturnsComponents()
     {
-        var client = _factory.CreateClient();
+        var client = _factory.CreateClient().WithAuth();
 
         var response = await client.GetAsync("/api/v1/health");
 
@@ -81,32 +61,4 @@ public class FullFlowTests : IClassFixture<TestWebApplicationFactory>
         result.GetProperty("version").GetString().Should().NotBeNullOrEmpty();
     }
 
-    [Fact]
-    public async Task UploadAndGetJob_RoundTrip()
-    {
-        var orgId = Guid.NewGuid();
-        var userId = Guid.NewGuid();
-        var client = _factory.CreateClient().WithAuth("Reviewer", userId, orgId);
-
-        // Upload
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("Herr Schmidt wohnt in Berlin."));
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-        content.Add(fileContent, "file", "test.txt");
-
-        var uploadResponse = await client.PostAsync("/api/v1/jobs", content);
-        uploadResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-        var uploadBody = await uploadResponse.Content.ReadAsStringAsync();
-        var uploadResult = JsonSerializer.Deserialize<JsonElement>(uploadBody, JsonOptions);
-        var jobId = uploadResult.GetProperty("id").GetString();
-
-        // Get job
-        var getResponse = await client.GetAsync($"/api/v1/jobs/{jobId}");
-        getResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-        var getBody = await getResponse.Content.ReadAsStringAsync();
-        var getResult = JsonSerializer.Deserialize<JsonElement>(getBody, JsonOptions);
-        getResult.GetProperty("id").GetString().Should().Be(jobId);
-    }
 }

@@ -32,10 +32,5 @@
     "dashboard": "Dashboard",
     "upload": "New Detection",
     "jobs": "Jobs"
-  },
-  "roles": {
-    "Admin": "Administrator",
-    "Reviewer": "Reviewer",
-    "User": "User"
   }
 }

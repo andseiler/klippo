@@ -3,7 +3,6 @@ namespace PiiGateway.Core.DTOs.Jobs;
 public class JobResponse
 {
     public Guid Id { get; set; }
-    public Guid OrganizationId { get; set; }
     public Guid CreatedById { get; set; }
     public string Status { get; set; } = string.Empty;
     public string FileName { get; set; } = string.Empty;

@@ -24,7 +24,7 @@ const allModes: { value: ViewMode; labelKey: string }[] = [
       v-for="m in allModes"
       :key="m.value"
       :class="[
-        'px-5 py-2 text-sm font-semibold rounded-md transition-colors',
+        'px-3 py-1.5 md:px-5 md:py-2 text-sm font-semibold rounded-md transition-colors',
         mode === m.value
           ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm'
           : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300',

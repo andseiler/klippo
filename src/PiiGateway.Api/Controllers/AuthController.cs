@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using PiiGateway.Core.Domain.Entities;
-using PiiGateway.Core.Domain.Enums;
 using PiiGateway.Core.DTOs.Auth;
 using PiiGateway.Core.Interfaces.Repositories;
 using PiiGateway.Core.Interfaces.Services;
@@ -16,7 +15,6 @@ namespace PiiGateway.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    private readonly IOrganizationRepository _organizationRepository;
     private readonly IJwtService _jwtService;
     private readonly JwtOptions _jwtOptions;
     private readonly GuestDemoOptions _guestOptions;
@@ -25,7 +23,6 @@ public class AuthController : ControllerBase
 
     public AuthController(
         IUserRepository userRepository,
-        IOrganizationRepository organizationRepository,
         IJwtService jwtService,
         IOptions<JwtOptions> jwtOptions,
         IOptions<GuestDemoOptions> guestOptions,
@@ -33,7 +30,6 @@ public class AuthController : ControllerBase
         PlaygroundUsageTracker usageTracker)
     {
         _userRepository = userRepository;
-        _organizationRepository = organizationRepository;
         _jwtService = jwtService;
         _jwtOptions = jwtOptions.Value;
         _guestOptions = guestOptions.Value;
@@ -63,8 +59,6 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email,
             Name = user.Name,
-            Role = user.Role.ToString(),
-            OrganizationId = user.OrganizationId
         });
     }
 
@@ -103,8 +97,6 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             Email = user.Email,
             Name = user.Name,
-            Role = user.Role.ToString(),
-            OrganizationId = user.OrganizationId
         });
     }
 

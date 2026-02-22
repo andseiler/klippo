@@ -37,11 +37,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Authorization policies
-builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"))
-    .AddPolicy("RequireReviewer", policy => policy.RequireRole("Admin", "Reviewer"))
-    .AddPolicy("RequireUser", policy => policy.RequireAuthenticatedUser());
+// Authorization
+builder.Services.AddAuthorization();
 
 // CORS
 builder.Services.AddCors(options =>

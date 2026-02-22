@@ -165,7 +165,6 @@ public class DePseudonymizationServiceTests
     private static Job CreateJob(Guid id, JobStatus status) => new()
     {
         Id = id,
-        OrganizationId = Guid.NewGuid(),
         CreatedById = Guid.NewGuid(),
         Status = status,
         FileName = "test.pdf",

@@ -128,7 +128,6 @@ public class PseudonymizationServiceTests
     private static Job CreateJob(Guid id) => new()
     {
         Id = id,
-        OrganizationId = Guid.NewGuid(),
         CreatedById = Guid.NewGuid(),
         Status = JobStatus.InReview,
         FileName = "test.pdf",

@@ -425,24 +425,12 @@ onUnmounted(() => {
           @update:display-mode="handleDisplayModeUpdate"
         />
 
-        <main class="flex-1 overflow-hidden mx-auto max-w-[1800px] w-full px-4 py-4">
+        <main class="flex-1 overflow-hidden mx-auto w-full px-4 py-4">
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 h-full">
             <!-- Verfremden mode: 3-column layout -->
             <template v-if="reviewStore.viewMode === 'pseudonymized'">
               <div class="lg:col-span-4">
-                <button
-                  v-if="isCollapsible"
-                  :class="[
-                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
-                    isPanelExpanded('original') ? 'rounded-b-none border-b-0' : '',
-                  ]"
-                  @click="togglePanel('original')"
-                >
-                  {{ t('review.workbench.originalPanel.title') }}
-                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('original') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
                 <WorkbenchDocumentViewer
-                  v-show="!isCollapsible || isPanelExpanded('original')"
                   ref="docViewerRef"
                   :segments="reviewStore.segments"
                   :entities-by-segment="reviewStore.entitiesBySegment"
@@ -453,19 +441,7 @@ onUnmounted(() => {
                 />
               </div>
               <div class="lg:col-span-4">
-                <button
-                  v-if="isCollapsible"
-                  :class="[
-                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
-                    isPanelExpanded('pseudonymized') ? 'rounded-b-none border-b-0' : '',
-                  ]"
-                  @click="togglePanel('pseudonymized')"
-                >
-                  {{ t('review.workbench.pseudoPanel.title') }}
-                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('pseudonymized') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
                 <PseudonymizedTextPanel
-                  v-show="!isCollapsible || isPanelExpanded('pseudonymized')"
                   ref="pseudoPanelRef"
                   :segments="reviewStore.segments"
                   :entities-by-segment="reviewStore.entitiesBySegment"
@@ -474,19 +450,7 @@ onUnmounted(() => {
                 />
               </div>
               <div class="lg:col-span-4">
-                <button
-                  v-if="isCollapsible"
-                  :class="[
-                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
-                    isPanelExpanded('mapping') ? 'rounded-b-none border-b-0' : '',
-                  ]"
-                  @click="togglePanel('mapping')"
-                >
-                  {{ t('review.workbench.zuordnung.title') }}
-                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('mapping') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
                 <WorkbenchRightRail
-                  v-show="!isCollapsible || isPanelExpanded('mapping')"
                   :text-selection="textSelection"
                 />
               </div>
@@ -495,19 +459,7 @@ onUnmounted(() => {
             <!-- Klartext mode: 2-column layout -->
             <template v-else>
               <div class="lg:col-span-8">
-                <button
-                  v-if="isCollapsible"
-                  :class="[
-                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
-                    isPanelExpanded('original') ? 'rounded-b-none border-b-0' : '',
-                  ]"
-                  @click="togglePanel('original')"
-                >
-                  {{ t('review.workbench.originalPanel.title') }}
-                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('original') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
                 <WorkbenchDocumentViewer
-                  v-show="!isCollapsible || isPanelExpanded('original')"
                   :segments="reviewStore.segments"
                   :entities-by-segment="reviewStore.entitiesBySegment"
                   :display-mode="reviewStore.viewMode"
@@ -515,19 +467,7 @@ onUnmounted(() => {
                 />
               </div>
               <div class="lg:col-span-4">
-                <button
-                  v-if="isCollapsible"
-                  :class="[
-                    'w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 text-sm font-medium text-gray-700 dark:text-gray-300',
-                    isPanelExpanded('mapping') ? 'rounded-b-none border-b-0' : '',
-                  ]"
-                  @click="togglePanel('mapping')"
-                >
-                  {{ t('review.workbench.zuordnung.title') }}
-                  <svg class="h-4 w-4 transition-transform" :class="isPanelExpanded('mapping') ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                </button>
                 <WorkbenchRightRail
-                  v-show="!isCollapsible || isPanelExpanded('mapping')"
                   :text-selection="textSelection"
                 />
               </div>

@@ -13,7 +13,6 @@ public class JobConfiguration : IEntityTypeConfiguration<Job>
 
         builder.HasKey(j => j.Id);
         builder.Property(j => j.Id).HasColumnName("id");
-        builder.Property(j => j.OrganizationId).HasColumnName("organization_id");
         builder.Property(j => j.CreatedById).HasColumnName("created_by_id");
         builder.Property(j => j.Status).HasColumnName("status")
             .HasConversion(v => v.ToString().ToLower(), v => v == "exported" ? JobStatus.Pseudonymized : Enum.Parse<JobStatus>(v, true))
@@ -32,12 +31,7 @@ public class JobConfiguration : IEntityTypeConfiguration<Job>
         builder.Property(j => j.PseudonymizedAt).HasColumnName("pseudonymized_at");
         builder.Property(j => j.PseudonymizedText).HasColumnName("pseudonymized_text");
 
-        builder.HasIndex(j => new { j.OrganizationId, j.Status }).HasDatabaseName("idx_jobs_org_status");
-
-        builder.HasOne(j => j.Organization)
-            .WithMany(o => o.Jobs)
-            .HasForeignKey(j => j.OrganizationId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasIndex(j => new { j.CreatedById, j.Status }).HasDatabaseName("idx_jobs_user_status");
 
         builder.HasOne(j => j.CreatedBy)
             .WithMany()

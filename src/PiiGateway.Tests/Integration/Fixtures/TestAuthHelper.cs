@@ -12,7 +12,7 @@ public static class TestAuthHelper
     public const string TestIssuer = "PiiGateway";
     public const string TestAudience = "PiiGateway";
 
-    public static string CreateToken(string role, Guid? userId = null, Guid? orgId = null)
+    public static string CreateToken(Guid? userId = null)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TestJwtSecret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -21,8 +21,6 @@ public static class TestAuthHelper
         {
             new Claim(ClaimTypes.NameIdentifier, (userId ?? Guid.NewGuid()).ToString()),
             new Claim(ClaimTypes.Email, "test@example.com"),
-            new Claim(ClaimTypes.Role, role),
-            new Claim("org_id", (orgId ?? Guid.NewGuid()).ToString()),
         };
 
         var token = new JwtSecurityToken(
@@ -35,9 +33,9 @@ public static class TestAuthHelper
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public static HttpClient WithAuth(this HttpClient client, string role, Guid? userId = null, Guid? orgId = null)
+    public static HttpClient WithAuth(this HttpClient client, Guid? userId = null)
     {
-        var token = CreateToken(role, userId, orgId);
+        var token = CreateToken(userId);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return client;
     }

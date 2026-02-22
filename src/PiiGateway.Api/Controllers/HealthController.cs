@@ -87,14 +87,12 @@ public class HealthController : ControllerBase
         var status = allHealthy ? "healthy" : "degraded";
 
         // Unauthenticated requests get a simple status response
-        var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
-
-        if (!isAdmin)
+        if (User.Identity?.IsAuthenticated != true)
         {
             return Ok(new { status });
         }
 
-        // Authenticated admin requests get detailed component info
+        // Authenticated requests get detailed component info
         var version = Assembly.GetExecutingAssembly()
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
             ?? Assembly.GetExecutingAssembly().GetName().Version?.ToString()

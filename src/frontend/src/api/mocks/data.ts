@@ -7,7 +7,6 @@ export function createMockJob(overrides: Partial<JobResponse> = {}): JobResponse
   const now = new Date().toISOString()
   return {
     id: `mock-${mockIdCounter}`,
-    organizationId: 'org-1',
     createdById: 'user-1',
     status: 'created',
     fileName: 'document.pdf',

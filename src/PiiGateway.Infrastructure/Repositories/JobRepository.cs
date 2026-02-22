@@ -22,10 +22,10 @@ public class JobRepository : IJobRepository
             .FirstOrDefaultAsync(j => j.Id == id);
     }
 
-    public async Task<(IReadOnlyList<Job> Items, int TotalCount)> GetByOrgAsync(Guid organizationId, int page, int pageSize)
+    public async Task<(IReadOnlyList<Job> Items, int TotalCount)> GetByUserAsync(Guid userId, int page, int pageSize)
     {
         var query = _context.Jobs
-            .Where(j => j.OrganizationId == organizationId && !j.IsGuest)
+            .Where(j => j.CreatedById == userId && !j.IsGuest)
             .OrderByDescending(j => j.CreatedAt);
 
         var totalCount = await query.CountAsync();
@@ -37,13 +37,13 @@ public class JobRepository : IJobRepository
         return (items, totalCount);
     }
 
-    public async Task<(IReadOnlyList<Job> Items, int TotalCount)> GetByOrgFilteredAsync(
-        Guid organizationId, int page, int pageSize,
+    public async Task<(IReadOnlyList<Job> Items, int TotalCount)> GetByUserFilteredAsync(
+        Guid userId, int page, int pageSize,
         JobStatus? statusFilter,
         DateTime? dateFrom, DateTime? dateTo)
     {
         var query = _context.Jobs
-            .Where(j => j.OrganizationId == organizationId && !j.IsGuest);
+            .Where(j => j.CreatedById == userId && !j.IsGuest);
 
         if (statusFilter.HasValue)
             query = query.Where(j => j.Status == statusFilter.Value);

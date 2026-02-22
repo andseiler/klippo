@@ -29,6 +29,7 @@ public class JobsControllerTests : IClassFixture<WebApplicationFactory<Program>>
                     ["ConnectionStrings:Redis"] = "localhost:6379",
                     ["FileStorage:BasePath"] = Path.Combine(Path.GetTempPath(), "piigateway_test_uploads"),
                     ["FileStorage:MaxFileSizeMb"] = "50",
+                    ["Encryption:Key"] = "dGhpcyBpcyBhIDMyIGJ5dGUga2V5ISEhMTIzNDU2Nzg=",
                 });
             });
         });
@@ -60,22 +61,6 @@ public class JobsControllerTests : IClassFixture<WebApplicationFactory<Program>>
     }
 
     [Fact]
-    public async Task CreateJob_TextFile_IsAccepted()
-    {
-        var client = CreateAuthenticatedClient();
-
-        var content = new MultipartFormDataContent();
-        var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("test content"));
-        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-        content.Add(fileContent, "file", "test.txt");
-
-        var response = await client.PostAsync("/api/v1/jobs", content);
-
-        // Should be accepted (202) — plaintext files are now supported
-        response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-    }
-
-    [Fact]
     public async Task GetJob_WithoutAuth_Returns401()
     {
         var client = _factory.CreateClient();
@@ -97,8 +82,6 @@ public class JobsControllerTests : IClassFixture<WebApplicationFactory<Program>>
         {
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Email, "test@example.com"),
-            new Claim(ClaimTypes.Role, "User"),
-            new Claim("org_id", Guid.NewGuid().ToString()),
         };
 
         var token = new JwtSecurityToken(

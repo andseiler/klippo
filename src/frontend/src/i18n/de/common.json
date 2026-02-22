@@ -32,10 +32,5 @@
     "dashboard": "Dashboard",
     "upload": "Neue Erkennung",
     "jobs": "Aufträge"
-  },
-  "roles": {
-    "Admin": "Administrator",
-    "Reviewer": "Prüfer",
-    "User": "Benutzer"
   }
 }

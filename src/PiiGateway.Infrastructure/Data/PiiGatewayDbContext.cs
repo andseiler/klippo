@@ -10,7 +10,6 @@ public class PiiGatewayDbContext : DbContext
     {
     }
 
-    public DbSet<Organization> Organizations => Set<Organization>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Job> Jobs => Set<Job>();
     public DbSet<TextSegment> TextSegments => Set<TextSegment>();

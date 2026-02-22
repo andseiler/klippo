@@ -33,7 +33,6 @@ public class JobsController : ControllerBase
     private readonly ISecondScanService _secondScanService;
     private readonly IDePseudonymizationService _dePseudonymizationService;
     private readonly IDocumentPreviewService _documentPreviewService;
-    private readonly IOrganizationRepository _organizationRepository;
     private readonly ILlmScanService _llmScanService;
     private readonly GuestDemoOptions _guestOptions;
     private readonly JobCancellationRegistry _cancellationRegistry;
@@ -50,7 +49,6 @@ public class JobsController : ControllerBase
         ISecondScanService secondScanService,
         IDePseudonymizationService dePseudonymizationService,
         IDocumentPreviewService documentPreviewService,
-        IOrganizationRepository organizationRepository,
         ILlmScanService llmScanService,
         IOptions<GuestDemoOptions> guestOptions,
         JobCancellationRegistry cancellationRegistry,
@@ -66,15 +64,11 @@ public class JobsController : ControllerBase
         _secondScanService = secondScanService;
         _dePseudonymizationService = dePseudonymizationService;
         _documentPreviewService = documentPreviewService;
-        _organizationRepository = organizationRepository;
         _llmScanService = llmScanService;
         _guestOptions = guestOptions.Value;
         _cancellationRegistry = cancellationRegistry;
         _rescanService = rescanService;
     }
-
-    private Guid GetOrgId() =>
-        Guid.Parse(User.FindFirst("org_id")?.Value ?? throw new UnauthorizedAccessException());
 
     private Guid GetUserId() =>
         Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value
@@ -107,13 +101,7 @@ public class JobsController : ControllerBase
         if (file.Length > 50 * 1024 * 1024)
             return BadRequest(new { message = "File size exceeds the 50 MB limit." });
 
-        var orgId = GetOrgId();
         var userId = GetUserId();
-
-        // Validate that the organization exists (guards against stale JWT after DB reset)
-        var org = await _organizationRepository.GetByIdAsync(orgId);
-        if (org == null)
-            return Unauthorized(new { message = "Organization not found. Your session may be expired — please log in again." });
 
         // Compute SHA-256 hash
         string fileHash;
@@ -127,7 +115,6 @@ public class JobsController : ControllerBase
         var job = new Job
         {
             Id = Guid.NewGuid(),
-            OrganizationId = orgId,
             CreatedById = userId,
             Status = JobStatus.Created,
             FileName = file.FileName,
@@ -173,7 +160,7 @@ public class JobsController : ControllerBase
         [FromQuery] DateTime? dateFrom = null,
         [FromQuery] DateTime? dateTo = null)
     {
-        var orgId = GetOrgId();
+        var userId = GetUserId();
 
         JobStatus? statusFilter = null;
         if (!string.IsNullOrEmpty(status) && Enum.TryParse<JobStatus>(status, ignoreCase: true, out var parsedStatus))
@@ -182,8 +169,8 @@ public class JobsController : ControllerBase
         var hasFilters = statusFilter.HasValue || dateFrom.HasValue || dateTo.HasValue;
 
         var (items, totalCount) = hasFilters
-            ? await _jobRepository.GetByOrgFilteredAsync(orgId, page, pageSize, statusFilter, dateFrom, dateTo)
-            : await _jobRepository.GetByOrgAsync(orgId, page, pageSize);
+            ? await _jobRepository.GetByUserFilteredAsync(userId, page, pageSize, statusFilter, dateFrom, dateTo)
+            : await _jobRepository.GetByUserAsync(userId, page, pageSize);
 
         var responseItems = new List<JobResponse>();
         foreach (var j in items)
@@ -203,12 +190,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Policy = "RequireAdmin")]
     public async Task<IActionResult> DeleteJob(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         // Delete file from storage (ignore errors if file already gone)
         try { await _fileStorageService.DeleteAsync(job.Id, job.FileType); } catch { }
@@ -227,7 +213,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         if (request.FileName != null)
         {
@@ -248,9 +234,7 @@ public class JobsController : ControllerBase
         if (job == null)
             return NotFound(new { message = "Job not found." });
 
-        // Verify org ownership
-        var orgId = GetOrgId();
-        if (job.OrganizationId != orgId)
+        if (job.CreatedById != GetUserId())
             return NotFound(new { message = "Job not found." });
 
         return Ok(await MapToResponseAsync(job));
@@ -261,7 +245,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -279,7 +263,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -293,12 +277,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/entities/{eid:guid}")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> UpdateEntity(Guid id, Guid eid, [FromBody] UpdateEntityRequest request)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -320,12 +303,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}/entities/{eid:guid}")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> DeleteEntity(Guid id, Guid eid)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -343,12 +325,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}/entities")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> DeleteAllEntities(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -362,12 +343,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/entities")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> AddEntity(Guid id, [FromBody] AddEntityRequest request)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -395,12 +375,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/complete-review")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> CompleteReview(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -414,12 +393,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/reopen-review")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> ReopenReview(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -433,12 +411,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/second-scan")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> TriggerSecondScan(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -452,12 +429,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/deanonymize")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> Deanonymize(Guid id, [FromBody] DePseudonymizeRequest request)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -471,12 +447,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/segments/{segId:guid}")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> UpdateSegment(Guid id, Guid segId, [FromBody] UpdateSegmentRequest request)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -490,12 +465,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/pseudonymized-text")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> UpdatePseudonymizedText(Guid id, [FromBody] UpdatePseudonymizedTextRequest request)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         try
         {
@@ -509,12 +483,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/llm-scan")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> StartLlmScan(Guid id, [FromBody] LlmScanStartRequest? request = null)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         if (job.Status != JobStatus.ReadyReview && job.Status != JobStatus.InReview
             && job.Status != JobStatus.Pseudonymized && job.Status != JobStatus.ScanPassed
@@ -535,7 +508,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         var status = _llmScanService.GetStatus(id);
         if (status == null) return NotFound(new { message = "No LLM scan found for this job." });
@@ -548,7 +521,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         if (job.Status != JobStatus.Created && job.Status != JobStatus.Processing)
             return BadRequest(new { message = "Job can only be cancelled when in Created or Processing status." });
@@ -572,7 +545,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         var cancelled = _llmScanService.CancelScan(id);
         if (!cancelled)
@@ -582,12 +555,11 @@ public class JobsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/rescan")]
-    [Authorize(Policy = "RequireReviewer")]
     public async Task<IActionResult> StartRescan(Guid id)
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         if (job.Status != JobStatus.ReadyReview && job.Status != JobStatus.InReview
             && job.Status != JobStatus.Pseudonymized && job.Status != JobStatus.ScanPassed
@@ -607,7 +579,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         var status = _rescanService.GetStatus(id);
         if (status == null) return NotFound(new { message = "No rescan found for this job." });
@@ -620,7 +592,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         var cancelled = _rescanService.CancelScan(id);
         if (!cancelled)
@@ -634,7 +606,7 @@ public class JobsController : ControllerBase
     {
         var job = await _jobRepository.GetByIdAsync(id);
         if (job == null) return NotFound(new { message = "Job not found." });
-        if (job.OrganizationId != GetOrgId()) return NotFound(new { message = "Job not found." });
+        if (job.CreatedById != GetUserId()) return NotFound(new { message = "Job not found." });
 
         var auditLogs = await _auditLogRepository.GetByJobIdAsync(id);
 
@@ -662,7 +634,6 @@ public class JobsController : ControllerBase
         var response = new JobResponse
         {
             Id = j.Id,
-            OrganizationId = j.OrganizationId,
             CreatedById = j.CreatedById,
             Status = j.Status.ToString().ToLower(),
             FileName = j.FileName,

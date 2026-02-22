@@ -17,7 +17,7 @@ namespace PiiGateway.Infrastructure.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            // Seed Playground organization
+            // Seed Playground organization (will be dropped by later migration)
             migrationBuilder.Sql(@"
                 INSERT INTO organizations (id, name, created_at)
                 VALUES ('a0000000-0000-0000-0000-000000000001', 'Playground', NOW())
