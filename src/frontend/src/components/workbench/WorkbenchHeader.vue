@@ -99,47 +99,49 @@ const showLlmScanButton = computed(() => POST_PROCESSING_STATUSES.includes(props
         </span>
       </div>
 
-      <!-- Status chip -->
-      <span :class="['inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0', statusMeta.colorClass]">
+      <span
+          :class="['inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full flex-shrink-0', statusMeta.colorClass]">
         {{ t(`job.status.${status}`, status) }}
       </span>
 
       <!-- Spacer (push actions right on desktop) -->
-      <div class="hidden lg:flex flex-1" />
+      <div class="hidden lg:flex flex-1"/>
 
       <!-- Desktop mode toggle -->
       <div class="hidden lg:flex lg:justify-center">
         <WorkbenchModeToggle
-          :mode="displayMode"
-          @update:mode="emit('update:displayMode', $event)"
+            :mode="displayMode"
+            @update:mode="emit('update:displayMode', $event)"
         />
       </div>
 
       <!-- Compact stats -->
-      <div class="hidden lg:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
-        <span>{{ t('review.workbench.header.entities', { count: summary.totalEntities }) }}</span>
-      </div>
+      <div class="flex gap-2">
+        <div class="hidden lg:flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+          <span>{{ t('review.workbench.header.entities', {count: summary.totalEntities}) }}</span>
+        </div>
 
-      <!-- Action buttons -->
-      <div class="flex items-center gap-2 flex-shrink-0">
-        <AppButton
-          v-if="showLlmScanButton"
-          variant="secondary"
-          size="sm"
-          @click="emit('rescan')"
-        >
-          <span class="hidden sm:inline">{{ t('review.workbench.header.rescan') }}</span>
-          <span class="sm:hidden">&#x21bb;</span>
-        </AppButton>
-        <AppButton
-          v-if="showLlmScanButton"
-          variant="secondary"
-          size="sm"
-          @click="emit('llmScan')"
-        >
-          <span class="hidden sm:inline">{{ t('review.workbench.header.llmScan') }}</span>
-          <span class="sm:hidden">AI</span>
-        </AppButton>
+        <!-- Action buttons -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <AppButton
+              v-if="showLlmScanButton"
+              variant="secondary"
+              size="sm"
+              @click="emit('rescan')"
+          >
+            <span class="hidden sm:inline">{{ t('review.workbench.header.rescan') }}</span>
+            <span class="sm:hidden">&#x21bb;</span>
+          </AppButton>
+          <AppButton
+              v-if="showLlmScanButton"
+              variant="secondary"
+              size="sm"
+              @click="emit('llmScan')"
+          >
+            <span class="hidden sm:inline">{{ t('review.workbench.header.llmScan') }}</span>
+            <span class="sm:hidden">AI</span>
+          </AppButton>
+        </div>
       </div>
     </div>
 
