@@ -52,7 +52,7 @@ router.beforeEach((to) => {
   const isGuest = localStorage.getItem('isGuest') === 'true'
 
   // Guest leaving playground: restore token or lock them in
-  if (isGuest && to.name !== 'playground') {
+  if (isGuest && to.name !== 'playground' && to.name !== 'login') {
     const previousToken = localStorage.getItem('previousToken')
     if (previousToken) {
       // Real user who entered playground — restore their token and let them through

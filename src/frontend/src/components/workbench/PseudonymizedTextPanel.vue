@@ -66,7 +66,7 @@ function handleActionClick() {
         {{ t('review.workbench.pseudoPanel.title') }}
       </span>
       <AppButton
-        :variant="reviewStore.reviewCompleted ? 'primary' : 'primary'"
+        variant="success"
         size="sm"
         @click="handleActionClick"
       >
