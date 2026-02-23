@@ -9,13 +9,13 @@
       "title": "So läuft's",
       "description": "Text oder Dokument hochladen → Klippo erkennt personenbezogene Daten (Namen, Adressen, Telefonnummern …) → Du bekommst eine verfremdete Version, die du in ChatGPT & Co. kopieren kannst.",
       "dataPrivacyTitle": "Was passiert mit meinen Daten?",
-      "dataPrivacyDescription": "Ich hoste alles auf Hetzner-Servern in Deutschland – deine Daten verlassen Deutschland nicht. Uploads und Texte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist, und anschließend automatisch gelöscht (Standard: nach 1 Stunde). Die Übertragung erfolgt verschlüsselt (TLS).",
+      "dataPrivacyDescription": "Ich hoste alles auf Hetzner-Servern in Deutschland – deine Daten verlassen Deutschland nicht. Uploads und Texte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist, und anschließend automatisch gelöscht. Die Übertragung erfolgt verschlüsselt (TLS).",
       "dataPrivacySelfHostingTitle": "Self-Hosting möglich",
       "dataPrivacySelfHostingDescription": "Wenn du maximale Kontrolle willst: Du kannst Klippo auch selbst hosten und komplett in deiner eigenen Umgebung betreiben."
     },
-    "betaNotice": "Dies ist eine Beta-Version von Klippo.",
+    "betaNotice": "Dies ist eine Test-Version von Klippo.",
     "betaAccount": "Für einen vollständigen Zugang schreib eine kurze Mail an",
-    "betaTechnical": "Die Inhalte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist – und danach automatisch gelöscht (Standard: nach 1 Stunde).",
+    "betaTechnical": "Die Inhalte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist – und danach automatisch gelöscht.",
     "about": {
       "title": "Über mich",
       "description": "Ich bin Andreas Seiler, Software-Entwickler. Ich baue Klippo, weil ich glaube, dass man KI produktiv nutzen kann, ohne sensible Daten preiszugeben.",
