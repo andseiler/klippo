@@ -3,7 +3,7 @@
     "title": "Klippo Playground",
     "subtitle": "Beta — Pseudonymize texts and documents so you can use AI chatbots without exposing personal data. Data is deleted after 1 hour.",
     "description": "Upload a document or paste text. Klippo detects names, addresses, phone numbers, and other personal data and replaces them with pseudonyms.",
-    "heroTitle": "You want to use AI – but not send your customer data along.",
+    "heroTitle": "You want to use AI – but not send sensible data along.",
     "heroDescription": "Klippo turns your text into a version you can easily copy into chatbots: names, addresses, phone numbers, and similar details are replaced with placeholders.",
     "howItWorks": {
       "title": "How it works",

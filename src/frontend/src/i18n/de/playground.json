@@ -3,14 +3,14 @@
     "title": "Klippo ausprobieren",
     "subtitle": "Beta — Verfremden Sie Texte und Dokumente, damit Sie KI-Chatbots nutzen können, ohne persönliche Daten preiszugeben. Daten werden nach 1 Stunde gelöscht.",
     "description": "Laden Sie ein Dokument hoch oder fügen Sie Text ein. Klippo erkennt Namen, Adressen, Telefonnummern und weitere personenbezogene Daten und ersetzt sie durch Pseudonyme.",
-    "heroTitle": "Du willst KI nutzen – aber nicht deine Kundendaten mitschicken.",
-    "heroDescription": "Klippo macht aus deinem Text eine Version, die du leichter in Chatbots kopieren kannst: Namen, Adressen, Telefonnummern und ähnliche Dinge werden durch Platzhalter ersetzt.",
+    "heroTitle": "Du willst KI nutzen – aber keine sensiblen Daten mitschicken.",
+    "heroDescription": "Klippo macht aus deinem Text eine Version, die du sicherer in Chatbots kopieren kannst: Namen, Adressen, Telefonnummern und ähnliche Dinge werden durch Platzhalter ersetzt.",
     "howItWorks": {
       "title": "So läuft's",
       "description": "Text oder Dokument hochladen → Klippo erkennt personenbezogene Daten (Namen, Adressen, Telefonnummern …) → Du bekommst eine verfremdete Version, die du in ChatGPT & Co. kopieren kannst."
     },
     "betaNotice": "Dies ist eine Beta-Version von Klippo.",
-    "betaAccount": "Für einen vollständigen Zugang schreiben Sie an",
+    "betaAccount": "Für einen vollständigen Zugang schreib eine kurze Mail an",
     "betaTechnical": "Die Inhalte werden nur so lange gespeichert, wie es für die Verarbeitung nötig ist – und danach automatisch gelöscht (Standard: nach 1 Stunde).",
     "about": {
       "title": "Über mich",
@@ -39,7 +39,7 @@
     "cancelled": "Verarbeitung wurde abgebrochen.",
     "startOver": "Neu starten",
     "guestError": "Gastsitzung konnte nicht gestartet werden. Bitte später erneut versuchen.",
-    "dailyLimitReached": "Tageslimit erreicht. Für vollen Zugang schreiben Sie an mail{'@'}andreas-seiler.net",
+    "dailyLimitReached": "Tageslimit erreicht. Für vollen Zugang schreib mir eine Mail an mail{'@'}andreas-seiler.net",
     "serviceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte später erneut versuchen."
   }
 }
