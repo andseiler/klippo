@@ -4,7 +4,7 @@ namespace PiiGateway.Infrastructure.Services;
 
 public class PlaygroundUsageTracker
 {
-    private const int MaxDailyUses = 3;
+    private const int MaxDailyUses = 100;
 
     private readonly ConcurrentDictionary<string, (int Count, DateTime ResetAt)> _usage = new();
 
