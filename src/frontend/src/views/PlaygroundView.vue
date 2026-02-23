@@ -308,6 +308,12 @@ onUnmounted(() => {
         <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ t('playground.howItWorks.title') }}</h2>
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.howItWorks.description') }}</p>
+
+          <!-- Data privacy section -->
+          <h3 class="mt-6 text-base font-semibold text-gray-900 dark:text-gray-100">{{ t('playground.howItWorks.dataPrivacyTitle') }}</h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.howItWorks.dataPrivacyDescription') }}</p>
+          <p class="mt-3 text-sm font-medium text-gray-900 dark:text-gray-100">{{ t('playground.howItWorks.dataPrivacySelfHostingTitle') }}</p>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ t('playground.howItWorks.dataPrivacySelfHostingDescription') }}</p>
         </div>
 
         <!-- d) Beta notice -->

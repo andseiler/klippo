@@ -7,7 +7,11 @@
     "heroDescription": "Klippo turns your text into a version you can easily copy into chatbots: names, addresses, phone numbers, and similar details are replaced with placeholders.",
     "howItWorks": {
       "title": "How it works",
-      "description": "Upload text or a document → Klippo detects personal data (names, addresses, phone numbers …) → You get a pseudonymized version you can copy into ChatGPT & co."
+      "description": "Upload text or a document → Klippo detects personal data (names, addresses, phone numbers …) → You get a pseudonymized version you can copy into ChatGPT & co.",
+      "dataPrivacyTitle": "What happens with my data?",
+      "dataPrivacyDescription": "Everything is hosted on Hetzner servers in Germany, so your data does not leave Germany. Files and text are stored only as long as needed for processing, then deleted automatically (default: after 1 hour). Data transfer is encrypted (TLS).",
+      "dataPrivacySelfHostingTitle": "Self-hosting available",
+      "dataPrivacySelfHostingDescription": "If you want maximum control: you can self-host Klippo and run it entirely in your own environment."
     },
     "betaNotice": "This is a beta version of Klippo.",
     "betaAccount": "For full access, contact",
