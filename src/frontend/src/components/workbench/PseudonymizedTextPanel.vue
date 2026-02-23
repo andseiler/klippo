@@ -78,7 +78,7 @@ function handleActionClick() {
     <div
       ref="scrollContainerRef"
       :class="[
-        'flex-1 overflow-y-auto p-6 lg:p-8',
+        'flex-1 overflow-y-auto min-h-0 p-6 lg:p-8',
         !reviewStore.reviewCompleted ? 'select-none' : ''
       ]"
       @mouseup="textSelection?.handleMouseUp($event, 'pseudonymized')"

@@ -504,7 +504,7 @@ onUnmounted(() => {
           <div class="grid grid-cols-1 gap-4 lg:grid-cols-12 h-full">
             <!-- Verfremden mode: 3-column layout -->
             <template v-if="reviewStore.viewMode === 'pseudonymized'">
-              <div class="lg:col-span-4">
+              <div class="lg:col-span-4  overflow-hidden h-full">
                 <WorkbenchDocumentViewer
                   ref="docViewerRef"
                   :segments="reviewStore.segments"
@@ -515,7 +515,7 @@ onUnmounted(() => {
                   @add-search-matches="(type: string) => reviewStore.addSearchMatchesAsEntities(documentSearch.actionableMatches.value, type)"
                 />
               </div>
-              <div class="lg:col-span-4">
+              <div class="lg:col-span-4  overflow-hidden h-full">
                 <PseudonymizedTextPanel
                   ref="pseudoPanelRef"
                   :segments="reviewStore.segments"
@@ -524,7 +524,7 @@ onUnmounted(() => {
                   @complete-review="showCompleteReviewModal = true"
                 />
               </div>
-              <div class="lg:col-span-4">
+              <div class="lg:col-span-4  overflow-hidden h-full">
                 <WorkbenchRightRail
                   :text-selection="textSelection"
                 />
@@ -533,7 +533,7 @@ onUnmounted(() => {
 
             <!-- Klartext mode: 2-column layout -->
             <template v-else>
-              <div class="lg:col-span-8">
+              <div class="lg:col-span-8 overflow-hidden h-full">
                 <WorkbenchDocumentViewer
                   :segments="reviewStore.segments"
                   :entities-by-segment="reviewStore.entitiesBySegment"
@@ -541,7 +541,7 @@ onUnmounted(() => {
                   :text-selection="textSelection"
                 />
               </div>
-              <div class="lg:col-span-4">
+              <div class="lg:col-span-4 overflow-hidden h-full">
                 <WorkbenchRightRail
                   :text-selection="textSelection"
                 />

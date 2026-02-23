@@ -90,7 +90,7 @@ defineExpose({ scrollContainer: containerRef })
     <!-- Scrollable document area -->
     <div
       ref="containerRef"
-      class="flex-1 overflow-y-auto p-6 lg:p-8"
+      class="flex-1 overflow-y-auto min-h-0 p-6 lg:p-8"
       @mouseup="displayMode === 'pseudonymized' ? textSelection.handleMouseUp($event, displayMode) : undefined"
     >
       <!-- De-pseudonymized: paste AI output + live-replace -->

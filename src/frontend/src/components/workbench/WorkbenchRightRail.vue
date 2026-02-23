@@ -54,7 +54,7 @@ async function handleDeleteAll() {
     </div>
 
     <!-- Scrollable content -->
-    <div class="flex-1 overflow-y-auto p-4">
+    <div class="flex-1 overflow-y-auto min-h-0 p-4">
       <EntitiesTabContent :text-selection="textSelection" />
     </div>
   </div>
